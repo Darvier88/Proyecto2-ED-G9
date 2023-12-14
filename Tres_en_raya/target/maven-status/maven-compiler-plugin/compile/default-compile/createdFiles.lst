@@ -1,3 +1,5 @@
+module-info.class
+ec\edu\espol\controllers\JugadoresTController.class
 ec\edu\espol\controllers\Menu_PrincipalController.class
 ec\edu\espol\tres_en_raya\App.class
-module-info.class
+ec\edu\espol\controllers\Modos_de_juegoController.class
