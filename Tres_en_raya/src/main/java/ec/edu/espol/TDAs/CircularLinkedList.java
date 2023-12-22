@@ -14,9 +14,16 @@ import java.util.Iterator;
  */
 public class CircularLinkedList<E> implements List<E>{
     private CircularNode<E> last;
-
+    
     public CircularLinkedList() {
         this.last = null;
+    }
+    
+    public CircularLinkedList(E[] elements){
+        this.last = null;
+        for(E e: elements){
+            this.addLast(e);
+        }
     }
     
     
@@ -166,7 +173,7 @@ public class CircularLinkedList<E> implements List<E>{
             int cont = 0;
             CircularNode<E> current = this.last.getNext();
             do {
-                if(cont == index -1){
+                if(cont == index ){
                     return current.getData();
                 }
                 cont++;
@@ -274,7 +281,7 @@ public class CircularLinkedList<E> implements List<E>{
         if(isEmpty()){
             return cont;
         }else{
-            cont = 1;
+            cont = 0;
             CircularNode<E> current = this.last.getNext();
             do {
                 cont++;
@@ -336,5 +343,7 @@ public class CircularLinkedList<E> implements List<E>{
         return it;
     }
     
-    
+    public void addAll(){
+        
+    }
 }

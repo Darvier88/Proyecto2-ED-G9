@@ -4,6 +4,7 @@
  */
 package ec.edu.espol.controllers;
 
+import ec.edu.espol.TDAs.CircularLinkedList;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,27 +32,26 @@ public class Modos_de_juegoController implements Initializable {
     @FXML
     private ImageView tradicional;
     private int indiceImg=0;
-    private String[] imagenesTrad={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
+    private String[] imagesTempTrad ={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
+    private CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
     private ScaleTransition scaleTransition;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
     }  
-
-
-
+    
+    
     private void cambiarImgT(){
-        indiceImg=(indiceImg+1)%imagenesTrad.length;
-        String nombreImg = imagenesTrad[indiceImg];
+        indiceImg=(indiceImg+1)%imagenesTrad.size();
+        String nombreImg = imagenesTrad.get(indiceImg);
         Image img = new Image("ec/edu/espol/images/"+nombreImg);
         tradicional.setImage(img);
     }
     private void restaurarOgT(){
         indiceImg=0;
-        Image img = new Image("ec/edu/espol/images/"+imagenesTrad[indiceImg]);
+        Image img = new Image("ec/edu/espol/images/"+imagenesTrad.get(indiceImg));
         tradicional.setImage(img);
     }
 
@@ -80,6 +80,7 @@ public class Modos_de_juegoController implements Initializable {
     }
 
     private void cambiarImagenYReproducirAnimacion(ScaleTransition scaleTransition) {
+                
         // Cambiar a la siguiente imagen
         cambiarImgT();
 
