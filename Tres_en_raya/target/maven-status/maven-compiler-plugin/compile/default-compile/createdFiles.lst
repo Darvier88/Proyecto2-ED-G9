@@ -1,5 +1,11 @@
+ec\edu\espol\TDAs\CircularNode.class
 module-info.class
+ec\edu\espol\TDAs\CircularLinkedList.class
+ec\edu\espol\model\Jugador.class
+ec\edu\espol\TDAs\List.class
 ec\edu\espol\controllers\JugadoresTController.class
 ec\edu\espol\controllers\Menu_PrincipalController.class
 ec\edu\espol\tres_en_raya\App.class
 ec\edu\espol\controllers\Modos_de_juegoController.class
+ec\edu\espol\model\Simbolo.class
+ec\edu\espol\TDAs\CircularLinkedList$1.class
