@@ -45,8 +45,6 @@ public class Jugador {
         this.tipoSimbolo = tipoSimbolo;
     }
     
-    
-
     @Override
     public String toString() {
         return "Jugador{" + "id=" + id + ", nombre=" + nombre + ", tipoSimbolo=" + tipoSimbolo + '}';
