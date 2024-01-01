@@ -4,8 +4,6 @@
  */
 package ec.edu.espol.controllers;
 
-import ec.edu.espol.TDAs.CircularLinkedList;
-import ec.edu.espol.model.Jugador;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -15,8 +13,8 @@ import javafx.fxml.Initializable;
  *
  * @author ASUS VIVOBOOK PRO
  */
-public class JugadoresTController implements Initializable {
-    private CircularLinkedList<Jugador> jugadores = new CircularLinkedList<>();
+public class JugadoresTController1 implements Initializable {
+
     /**
      * Initializes the controller class.
      */
@@ -26,7 +24,6 @@ public class JugadoresTController implements Initializable {
         
     }    
     
-    public void randomizarSimbolo(){
-        
-    }
+    
+    
 }

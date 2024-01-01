@@ -6,7 +6,7 @@ package ec.edu.espol.TDAs;
 
 import java.util.Comparator;
 import java.util.Iterator;
-
+import java.util.ListIterator;
 
 /**
  *
@@ -323,6 +323,7 @@ public class CircularLinkedList<E> implements List<E>{
     public Iterator<E> iteratorDo() {
         //iterador con el bucle infinito manejado internamente
         int size = this.size();
+        System.out.println(size);
         Iterator<E> it = new Iterator<E>() {
             private CircularNode<E> cursor = last.getNext();
             int c = 0;
@@ -342,6 +343,80 @@ public class CircularLinkedList<E> implements List<E>{
 
         return it;
     }
+    
+    public ListIterator<E> listIterator(){
+        int size = this.size();
+        System.out.println(size);
+        ListIterator<E> listIt = new ListIterator<>(){
+            private CircularNode<E> cursor = last.getNext();
+            int c = 0;
+            @Override
+            public boolean hasNext() {
+                return cursor != null;
+            }
+
+            @Override
+            public E next() {
+                E tmp = cursor.getData();
+                cursor = cursor.getNext();
+                c++;
+                return tmp;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return cursor != null;
+            }
+            
+
+            @Override
+            public E previous() {
+                E tmp = cursor.getData();
+                cursor = cursor.getPrevious();
+                c--;
+                return tmp;
+            }
+
+            @Override
+            public int nextIndex() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public int previousIndex() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void set(E e) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void add(E e) {
+                
+                if(e == null ){
+                throw new NullPointerException("El elemento no puede ser nulo");
+                }
+                else{
+                    CircularNode<E> node = new CircularNode<>(e);
+                    node.setNext(cursor.getNext());
+                    node.setPrevious(cursor);
+                    cursor.getNext().setPrevious(node);
+                    cursor.setNext(node);
+                }
+            }
+            
+        };
+        return listIt;
+    }
+    
+  
     
     public void addAll(){
         
