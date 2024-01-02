@@ -27,7 +27,7 @@
                <children>
                   <BorderPane>
                      <center>
-                        <ImageView fx:id="modes" fitHeight="150.0" fitWidth="200.0" onMouseEntered="#agrandarImg" onMouseExited="#restaurarImg" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                        <ImageView fx:id="modes" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#elegido" onMouseEntered="#agrandarImg" onMouseExited="#restaurarImg" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                            <image>
                               <Image url="@../images/j_vs_j.png" />
                            </image>

@@ -94,12 +94,13 @@ public class Modos_de_competenciaController implements Initializable {
         labelmodes.setText(mapa.get(name));
     }
     
-    private void elegidoT(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/jugadoresT.fxml"));
-        Parent jugadoresTParent = loader.load();
-        Scene jugadoresTScene = new Scene(jugadoresTParent,680,480);
+    @FXML
+    private void elegido(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
+        Parent fichasParent = loader.load();
+        Scene fichasScene = new Scene(fichasParent,680,480);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(jugadoresTScene);
+        window.setScene(fichasScene);
         window.show();   
     }
     

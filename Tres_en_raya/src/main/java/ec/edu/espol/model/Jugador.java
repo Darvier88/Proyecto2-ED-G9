@@ -5,6 +5,7 @@
 package ec.edu.espol.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -60,10 +61,17 @@ public class Jugador {
         return "Jugador{" + "id=" + id + ", nombre=" + nombre + ", tipoSimbolo=" + tipoSimbolo + '}';
     }
     public static ArrayList<Jugador> randomizarSimbolos(){
-        ArrayList<Jugador> j = new ArrayList<>();
-        for(int i=0;i<2;i++){
+        ArrayList<Jugador> players= new ArrayList<>();
+        ArrayList<String> pieceTypes = new ArrayList<>();
+        pieceTypes.add("O");
+        pieceTypes.add("X");
+        Collections.shuffle(pieceTypes);
+        for(int i=0; i<pieceTypes.size();i++){
             Jugador j = new Jugador();
-            
+            j.setId(1);
+            j.setTipoSimbolo(pieceTypes.get(i));
+            players.add(j);
         }
+        return players;
     }
 }
