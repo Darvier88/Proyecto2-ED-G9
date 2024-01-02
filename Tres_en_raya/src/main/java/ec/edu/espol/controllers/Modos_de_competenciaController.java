@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.control.CheckBox;
 /**
  * FXML Controller class
  *
@@ -99,7 +100,7 @@ public class Modos_de_competenciaController implements Initializable {
         Scene jugadoresTScene = new Scene(jugadoresTParent,680,480);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(jugadoresTScene);
-        window.show();
+        window.show();   
     }
     
     

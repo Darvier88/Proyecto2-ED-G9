@@ -36,7 +36,6 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-<<<<<<< HEAD
 //        Jugador j1 = new Jugador(1, "Apolo", "X");
 //        Jugador j2 = new Jugador(2, "Fernando", "O");
 //        Jugador j3 = new Jugador(3, "Hera", "X");
@@ -68,19 +67,9 @@ public class App extends Application {
 //       for(Jugador j: listJ){
 //           System.out.println(j.toString());
 //       }
-       launch();
-=======
-          String[] imagesTempTrad ={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
-         CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
-        System.out.println("get");
-        System.out.println(imagenesTrad.size());
-        System.out.println(imagesTempTrad.length);
-        for(int i = 0; i<imagenesTrad.size(); i++){
-            
-            System.out.println(imagenesTrad.get(i));
-        }
+        String[] imagesTempTrad ={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
+        CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
         launch();
->>>>>>> refs/remotes/origin/main
          
     }
 

@@ -20,6 +20,16 @@ public class Jugador {
         this.nombre = nombre;
         this.tipoSimbolo = tipoSimbolo;
     }
+    public Jugador() {
+        this.id = 0;
+        this.nombre = null;
+        this.tipoSimbolo = null;
+    }
+    public Jugador(String nombre) {
+        this.id = 0;
+        this.nombre = nombre;
+        this.tipoSimbolo = null;
+    }
 
     public int getId() {
         return id;
@@ -49,6 +59,11 @@ public class Jugador {
     public String toString() {
         return "Jugador{" + "id=" + id + ", nombre=" + nombre + ", tipoSimbolo=" + tipoSimbolo + '}';
     }
-    
-    
+    public static ArrayList<Jugador> randomizarSimbolos(){
+        ArrayList<Jugador> j = new ArrayList<>();
+        for(int i=0;i<2;i++){
+            Jugador j = new Jugador();
+            
+        }
+    }
 }
