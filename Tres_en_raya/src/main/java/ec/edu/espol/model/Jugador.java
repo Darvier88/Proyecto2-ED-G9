@@ -15,23 +15,32 @@ public class Jugador {
     private int id;
     private String nombre;
     private String tipoSimbolo;
+    private int dado;
 
     public Jugador(int id, String nombre, String tipoSimbolo) {
         this.id = id;
         this.nombre = nombre;
         this.tipoSimbolo = tipoSimbolo;
+        this.dado=0;
     }
     public Jugador() {
         this.id = 0;
         this.nombre = null;
         this.tipoSimbolo = null;
+        this.dado=0;
     }
     public Jugador(String nombre) {
         this.id = 0;
         this.nombre = nombre;
         this.tipoSimbolo = null;
+        this.dado=0;
     }
-
+    public Jugador(int id,String tipoS) {
+        this.id = id;
+        this.nombre = null;
+        this.tipoSimbolo = tipoS;
+        this.dado=0;
+    }
     public int getId() {
         return id;
     }
@@ -55,6 +64,14 @@ public class Jugador {
     public void setTipoSimbolo(String tipoSimbolo) {
         this.tipoSimbolo = tipoSimbolo;
     }
+
+    public int getDado() {
+        return dado;
+    }
+
+    public void setDado(int dado) {
+        this.dado = dado;
+    }
     
     @Override
     public String toString() {
@@ -68,7 +85,7 @@ public class Jugador {
         Collections.shuffle(pieceTypes);
         for(int i=0; i<pieceTypes.size();i++){
             Jugador j = new Jugador();
-            j.setId(1);
+            j.setId(i+1);
             j.setTipoSimbolo(pieceTypes.get(i));
             players.add(j);
         }

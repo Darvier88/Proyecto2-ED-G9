@@ -5,8 +5,10 @@
 package ec.edu.espol.controllers;
 
 import ec.edu.espol.TDAs.CircularLinkedList;
+import ec.edu.espol.model.Jugador;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
@@ -50,6 +52,8 @@ public class Modos_de_competenciaController implements Initializable {
     private ImageView rightarrow;
     @FXML
     private Label labelmodes;
+    @FXML
+    private CheckBox fichas;
     /**
      * Initializes the controller class.
      */
@@ -96,12 +100,27 @@ public class Modos_de_competenciaController implements Initializable {
     
     @FXML
     private void elegido(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
-        Parent fichasParent = loader.load();
-        Scene fichasScene = new Scene(fichasParent,680,480);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(fichasScene);
-        window.show();   
+        if(!fichas.isSelected()){
+            ArrayList<Jugador> players = Jugador.randomizarSimbolos();
+            Jugador j1 = players.get(0);
+            Jugador j2 = players.get(1);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
+            Parent fichasParent = loader.load();
+            Scene fichasScene = new Scene(fichasParent,680,480);
+            Tipo_fichasController tipoFichasController = loader.getController();
+            tipoFichasController.inicializar(j1, j2);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(fichasScene);
+            window.show();    
+        }
+        else{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
+            Parent fichasParent = loader.load();
+            Scene fichasScene = new Scene(fichasParent,680,480);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(fichasScene);
+            window.show(); 
+        }
     }
     
     
