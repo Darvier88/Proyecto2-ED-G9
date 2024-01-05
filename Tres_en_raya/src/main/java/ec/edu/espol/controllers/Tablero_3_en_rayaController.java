@@ -4,14 +4,19 @@
  */
 package ec.edu.espol.controllers;
 
+import ec.edu.espol.model.GamePhase;
+import static ec.edu.espol.model.GamePhase.STANDBY;
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Simbolo;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -28,12 +33,18 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Label mensaje;
     private Jugador primero;
     private Jugador segundo;
+    private Jugador actual;
+    private Simbolo fichaActual;
     @FXML
     private StackPane sp1;
     private int turno=0;
     private ImageView[][] imageViews = new ImageView[3][3];
     private Button[][] buttons = new Button[3][3];
     private int currentRow, currentCol;
+    private GamePhase currentPhase = STANDBY;
+    private Simbolo ficha;
+    private int anchoIm = 50;
+    private int altoIm = 30;
     @FXML
     private GridPane gp;
 
@@ -49,7 +60,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         j2=p2;
         this.compararNum();
         turno++;
-        this.visualizarTurno(turno);
         inicializarTablero();
     }
     private void compararNum(){
@@ -85,6 +95,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 b.setPrefHeight(86);
                 ImageView iv = new ImageView();
                 imageViews[row][col] = iv;
+                iv.setUserData(new Simbolo(row,col));
                 b.setGraphic(iv);
                 b.setStyle("-fx-base: transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
                 if((row==0 && col==0)||(row==0 && col==1)||(row==1 && col==0)||(row==1 && col==1)){
@@ -99,9 +110,63 @@ public class Tablero_3_en_rayaController implements Initializable {
                 buttons[row][col]=b;
                 b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                b.setOnMouseClicked(this::ponerFicha);
                 gp.add(b, row, col);
                 
             }
         }
     }
+
+    private void ponerFicha(MouseEvent event) {
+        Button b = (Button) event.getSource();
+        ImageView iv = (ImageView) b.getGraphic();
+        switch(currentPhase){
+            case STANDBY:
+                visualizarTurno(turno);
+                asignarJActual(turno);
+                fichaActual = asignarSimbolo(actual);
+                currentPhase=GamePhase.PUT;
+            case PUT:
+                ponerFicha(iv);
+        }
+    }
+    private void asignarJActual(int t){
+        if(t%2==1){
+            this.actual=primero;
+        }
+        else{
+            this.actual=segundo;
+        }
+    }
+    private Simbolo asignarSimbolo(Jugador actual) {
+        return new Simbolo("ec/edu/espol/images/"+actual.getTipoSimbolo()+".png",actual);
+    }
+    private void ponerFicha(ImageView iv){
+        Simbolo s = (Simbolo) iv.getUserData();
+        if(s.getImagen()==null && s.getJ()==null){
+            //Mostrar mensaje de casilla ocupada
+        }
+        else{
+            s.setImagen(fichaActual.getImagen());
+            s.setJ(fichaActual.getJ());
+            iv.setImage(new Image(fichaActual.getImagen()));
+            iv.setFitWidth(anchoIm);
+            iv.setFitHeight(altoIm);
+            iv.setUserData(s);
+        }
+    }
+    private void iniciarNuevoTurno(){
+        turno++;
+        currentPhase= GamePhase.STANDBY;
+    }
+    //Modificar el tamaño de las fichas para que se vean esteticas
+    //Crear la funcion mostrar Mensaje
+    //Crear la funcion tresEnRaya que verifica si ha ocurrido un ganador
+    //Crear la funcion verificarFila,verificarDiagonal,verificarColumna, estas se usaran en la funcion tresEnRaya para ver si alguien gano
+    //Crear la funcion empate, la cual ocurre cuando el tablero se ha llenado sin que haya un ganador
+    //Poner tanto empate como tresEnRaya antes del switch, se pone de ejemplo la funcion jaqueMate del Ajedrez:
+//    if(jaqueMate(imageViews,colorEnemigo)){
+//            return;
+//        }
+//        switch(currentPhase)
 }
