@@ -9,12 +9,14 @@ import static ec.edu.espol.model.GamePhase.STANDBY;
 import ec.edu.espol.model.Jugador;
 import ec.edu.espol.model.Simbolo;
 import ec.edu.espol.model.Util;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -138,6 +141,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         if(tresEnRaya()){
             Util.mostrarMensaje("Ganador", "Ganador");
+            inicio();
         }
     }
     private void asignarJActual(int t){
@@ -261,12 +265,32 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         return false;
     }
-    //Crear la funcion tresEnRaya que verifica si ha ocurrido un ganador
-    //Crear la funcion verificarFila,verificarDiagonal,verificarColumna, estas se usaran en la funcion tresEnRaya para ver si alguien gano
+    
+    public void inicio() {
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Menu_Principal.fxml"));
+        Parent menuDeInicioParent = loader.load();
+        Scene menuDeInicioScene = new Scene(menuDeInicioParent, 680, 480);
+        // Obtiene el Stage desde cualquier nodo de la escena actual
+        Stage currentStage = (Stage) sp1.getScene().getWindow();
+        // Cerrar la ventana actual
+        currentStage.close();
+        Stage window = new Stage();
+        window.setTitle("Ventana de Inicio");
+        window.setScene(menuDeInicioScene);
+        window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Manejo de excepciones en caso de error al cargar el FXML
+        }
+    }
+}
+    
     //Crear la funcion empate, la cual ocurre cuando el tablero se ha llenado sin que haya un ganador
     //Poner tanto empate como tresEnRaya antes del switch, se pone de ejemplo la funcion jaqueMate del Ajedrez:
+    //Nop Xd, va despues del switch en la funcion PonerSimbolo, al menos a mi no me funciona bien antes, pilas (Jonathan)
 //    if(jaqueMate(imageViews,colorEnemigo)){
 //            return;
 //        }
 //        switch(currentPhase)
-}
+
