@@ -37,7 +37,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Simbolo fichaActual;
     @FXML
     private StackPane sp1;
-    private int turno=0;
+    private int turno=1;
     private ImageView[][] imageViews = new ImageView[3][3];
     private Button[][] buttons = new Button[3][3];
     private int currentRow, currentCol;
@@ -60,6 +60,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         j2=p2;
         this.compararNum();
         turno++;
+        visualizarTurno(turno);
         inicializarTablero();
     }
     private void compararNum(){
@@ -74,6 +75,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void visualizarTurno(int t){
         mensaje= new Label();
+        sp1.getChildren().clear();
         if(t%2==1){
            mensaje.setText("Turno de jugador "+primero.getId()); 
         }
@@ -110,14 +112,15 @@ public class Tablero_3_en_rayaController implements Initializable {
                 buttons[row][col]=b;
                 b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                b.setOnMouseClicked(this::ponerFicha);
+                b.setOnMouseClicked(this::ponerSimbolo);
                 gp.add(b, row, col);
                 
             }
         }
     }
 
-    private void ponerFicha(MouseEvent event) {
+    private void ponerSimbolo(MouseEvent event) {
+        System.out.println("Hola");
         Button b = (Button) event.getSource();
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
@@ -128,6 +131,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 currentPhase=GamePhase.PUT;
             case PUT:
                 ponerFicha(iv);
+                iniciarNuevoTurno();
         }
     }
     private void asignarJActual(int t){
@@ -143,7 +147,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void ponerFicha(ImageView iv){
         Simbolo s = (Simbolo) iv.getUserData();
-        if(s.getImagen()==null && s.getJ()==null){
+        if(s.getImagen()!=null && s.getJ()!=null){
             //Mostrar mensaje de casilla ocupada
         }
         else{
