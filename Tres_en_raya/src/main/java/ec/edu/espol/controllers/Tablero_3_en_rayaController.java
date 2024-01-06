@@ -8,10 +8,13 @@ import ec.edu.espol.model.GamePhase;
 import static ec.edu.espol.model.GamePhase.STANDBY;
 import ec.edu.espol.model.Jugador;
 import ec.edu.espol.model.Simbolo;
+import ec.edu.espol.model.Util;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -43,10 +46,11 @@ public class Tablero_3_en_rayaController implements Initializable {
     private int currentRow, currentCol;
     private GamePhase currentPhase = STANDBY;
     private Simbolo ficha;
-    private int anchoIm = 50;
-    private int altoIm = 30;
+    private int anchoIm = 80;
+    private int altoIm = 80;
     @FXML
     private GridPane gp;
+    private Simbolo sbGanador;
 
     /**
      * Initializes the controller class.
@@ -120,7 +124,6 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
 
     private void ponerSimbolo(MouseEvent event) {
-        System.out.println("Hola");
         Button b = (Button) event.getSource();
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
@@ -132,6 +135,9 @@ public class Tablero_3_en_rayaController implements Initializable {
             case PUT:
                 ponerFicha(iv);
                 iniciarNuevoTurno();
+        }
+        if(tresEnRaya()){
+            Util.mostrarMensaje("Ganador", "Ganador");
         }
     }
     private void asignarJActual(int t){
@@ -148,7 +154,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private void ponerFicha(ImageView iv){
         Simbolo s = (Simbolo) iv.getUserData();
         if(s.getImagen()!=null && s.getJ()!=null){
-            //Mostrar mensaje de casilla ocupada
+            Util.mostrarMensaje("Esta casilla ya está ocupada. Por favor, elige otra.", "Casilla Ocupada");
         }
         else{
             s.setImagen(fichaActual.getImagen());
@@ -163,8 +169,98 @@ public class Tablero_3_en_rayaController implements Initializable {
         turno++;
         currentPhase= GamePhase.STANDBY;
     }
-    //Modificar el tamaño de las fichas para que se vean esteticas
-    //Crear la funcion mostrar Mensaje
+    
+    private boolean tresEnRaya(){
+        //verifica si ha ocurrido un ganador
+        return verificarFila() || verificarColumna() || verificarDiagonalPrincipal() || verificarDiagonalSecundaria();
+    }
+    
+    private boolean verificarSimbolosIguales(Simbolo sb1, Simbolo sb2,Simbolo sb3){
+        if(sb1 != null && sb2 != null && sb3 != null){
+            if(sb1.getImagen() != null && sb2.getImagen() != null && sb3.getImagen() != null)
+            return (sb1.getImagen().compareTo(sb2.getImagen()) == 0) && (sb1.getImagen().compareTo(sb3.getImagen()) == 0);
+        }
+        return false;
+    }
+    
+    private Simbolo obtenerSimbolo(Button btn) {
+        return (btn != null) ? (Simbolo) ((ImageView) btn.getGraphic()).getUserData() : null;
+    }
+    
+    private boolean verificarFila(){
+        //verifica si las tres fichas son iguales en la fila
+        for(int i = 0; i<buttons.length;i++){
+            Button btn1 = buttons[i][0];
+            Button btn2 = buttons[i][1];
+            Button btn3 = buttons[i][2];
+
+            Simbolo sb1 = obtenerSimbolo(btn1);
+            Simbolo sb2 = obtenerSimbolo(btn2);
+            Simbolo sb3 = obtenerSimbolo(btn3);
+
+            if (verificarSimbolosIguales(sb1, sb2, sb3)) {
+                System.out.println(sb1.getImagen());
+                System.out.println(sb2.getImagen());
+                System.out.println(sb3.getImagen());
+                sbGanador = sb1;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean verificarDiagonalPrincipal(){
+        //verifica si las tres fichas son iguales en la diagonal
+        Button btn1 = buttons[0][0];
+        Button btn2 = buttons[1][1];
+        Button btn3 = buttons[2][2];
+
+        Simbolo sb1 = obtenerSimbolo(btn1);
+        Simbolo sb2 = obtenerSimbolo(btn2);
+        Simbolo sb3 = obtenerSimbolo(btn3);
+
+        if (verificarSimbolosIguales(sb1, sb2, sb3)) {
+            sbGanador = sb1;
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean verificarDiagonalSecundaria(){
+        //verifica si las tres fichas son iguales en la diagonal
+        Button btn1 = buttons[0][2];
+        Button btn2 = buttons[1][1];
+        Button btn3 = buttons[2][0];
+
+        Simbolo sb1 = obtenerSimbolo(btn1);
+        Simbolo sb2 = obtenerSimbolo(btn2);
+        Simbolo sb3 = obtenerSimbolo(btn3);
+
+        if (verificarSimbolosIguales(sb1, sb2, sb3)) {
+            sbGanador = sb1;
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean verificarColumna(){
+        //verifica si las tres fichas son iguales en la columna
+        for(int i = 0; i<buttons.length;i++){
+            Button btn1 = buttons[0][i];
+            Button btn2 = buttons[1][i];
+            Button btn3 = buttons[2][i];
+
+            Simbolo sb1 = obtenerSimbolo(btn1);
+            Simbolo sb2 = obtenerSimbolo(btn2);
+            Simbolo sb3 = obtenerSimbolo(btn3);
+
+            if (verificarSimbolosIguales(sb1, sb2, sb3)) {
+                sbGanador = sb1;
+                return true;
+            }
+        }
+        return false;
+    }
     //Crear la funcion tresEnRaya que verifica si ha ocurrido un ganador
     //Crear la funcion verificarFila,verificarDiagonal,verificarColumna, estas se usaran en la funcion tresEnRaya para ver si alguien gano
     //Crear la funcion empate, la cual ocurre cuando el tablero se ha llenado sin que haya un ganador

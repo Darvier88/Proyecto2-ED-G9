@@ -1,6 +1,7 @@
 ec\edu\espol\model\ResultadoDado.class
 ec\edu\espol\TDAs\CircularNode.class
 ec\edu\espol\TDAs\Tree.class
+ec\edu\espol\model\Util.class
 ec\edu\espol\model\Jugador.class
 ec\edu\espol\TDAs\List.class
 ec\edu\espol\TDAs\Heap.class
