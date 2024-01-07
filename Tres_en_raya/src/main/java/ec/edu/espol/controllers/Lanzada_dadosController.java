@@ -7,6 +7,7 @@ package ec.edu.espol.controllers;
 import ec.edu.espol.model.Dado;
 import ec.edu.espol.model.Jugador;
 import ec.edu.espol.model.ResultadoDado;
+import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,7 +64,6 @@ public class Lanzada_dadosController implements Initializable {
             ResultadoDado resultado = dice.lanzar();
 
             // Establecer el GIF durante 1 segundo
-            System.out.println(dice.getMov());
             dado.setImage(new Image(dice.getMov())); // Reemplaza con la ruta correcta
             
 
@@ -71,6 +71,12 @@ public class Lanzada_dadosController implements Initializable {
             PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished(e -> {
                 mostrarResultado(resultado.getLado(), resultado.getNumero());
+                if(dice.repetirTirada(p1, p2)){
+                    lanzadas++;
+                    dice.reiniciar();
+                    Util.mostrarMensaje("Repita el lanzamiento", "Numeros iguales");
+                    return;
+                }
                 dice.reiniciar();
                 cambiarMensaje();
 

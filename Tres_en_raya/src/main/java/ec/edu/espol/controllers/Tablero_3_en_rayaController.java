@@ -43,7 +43,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Simbolo fichaActual;
     @FXML
     private StackPane sp1;
-    private int turno=1;
+    private int turno=0;
     private ImageView[][] imageViews = new ImageView[3][3];
     private Button[][] buttons = new Button[3][3];
     private int currentRow, currentCol;
@@ -53,7 +53,6 @@ public class Tablero_3_en_rayaController implements Initializable {
     private int altoIm = 80;
     @FXML
     private GridPane gp;
-    private Simbolo sbGanador;
 
     /**
      * Initializes the controller class.
@@ -121,7 +120,6 @@ public class Tablero_3_en_rayaController implements Initializable {
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 b.setOnMouseClicked(this::ponerSimbolo);
                 gp.add(b, row, col);
-                
             }
         }
     }
@@ -131,17 +129,16 @@ public class Tablero_3_en_rayaController implements Initializable {
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
             case STANDBY:
-                visualizarTurno(turno);
                 asignarJActual(turno);
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
             case PUT:
                 ponerFicha(iv);
                 iniciarNuevoTurno();
+                visualizarTurno(turno);
         }
         if(tresEnRaya()){
-            String jugadorGanador = sbGanador.getJ().getNombre();
-            Util.mostrarMensaje("Felicidades jugador " + jugadorGanador + ", has ganado la partida.", "Ganador");
+            Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
             inicio();
         }else if(empate()){
             System.out.println("HAY UN EMPATE");
@@ -192,26 +189,19 @@ public class Tablero_3_en_rayaController implements Initializable {
         return false;
     }
     
-    private Simbolo obtenerSimbolo(Button btn) {
-        return (btn != null) ? (Simbolo) ((ImageView) btn.getGraphic()).getUserData() : null;
-    }
     
     private boolean verificarColumna(){
         //verifica si las tres fichas son iguales en la fila
-        for(int i = 0; i<buttons.length;i++){
-            Button btn1 = buttons[i][0];
-            Button btn2 = buttons[i][1];
-            Button btn3 = buttons[i][2];
+        for(int i = 0; i<imageViews.length;i++){
+            ImageView iv1 = imageViews[i][0];
+            ImageView iv2 = imageViews[i][1];
+            ImageView iv3 = imageViews[i][2];
 
-            Simbolo sb1 = obtenerSimbolo(btn1);
-            Simbolo sb2 = obtenerSimbolo(btn2);
-            Simbolo sb3 = obtenerSimbolo(btn3);
+            Simbolo s1 = (Simbolo) iv1.getUserData();
+            Simbolo s2 = (Simbolo) iv2.getUserData();
+            Simbolo s3 = (Simbolo) iv3.getUserData();
 
-            if (verificarSimbolosIguales(sb1, sb2, sb3)) {
-                sbGanador = sb1;
-                System.out.println("JUGADOR GANADOR" + sb1.getJ().getNombre());
-                System.out.println("JUGADOR GANADOR 2" + sbGanador.getImagen());
-                
+            if (verificarSimbolosIguales(s1, s2, s3)) {
                 return true;
             }
         }
@@ -220,16 +210,15 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean verificarDiagonalPrincipal(){
         //verifica si las tres fichas son iguales en la diagonal
-        Button btn1 = buttons[0][0];
-        Button btn2 = buttons[1][1];
-        Button btn3 = buttons[2][2];
+        ImageView iv1 = imageViews[0][0];
+        ImageView iv2 = imageViews[1][1];
+        ImageView iv3 = imageViews[2][2];
 
-        Simbolo sb1 = obtenerSimbolo(btn1);
-        Simbolo sb2 = obtenerSimbolo(btn2);
-        Simbolo sb3 = obtenerSimbolo(btn3);
+        Simbolo s1 = (Simbolo) iv1.getUserData();
+        Simbolo s2 = (Simbolo) iv2.getUserData();
+        Simbolo s3 = (Simbolo) iv3.getUserData();
 
-        if (verificarSimbolosIguales(sb1, sb2, sb3)) {
-            sbGanador = sb1;
+        if (verificarSimbolosIguales(s1, s2, s3)) {
             return true;
         }
         return false;
@@ -237,16 +226,15 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean verificarDiagonalSecundaria(){
         //verifica si las tres fichas son iguales en la diagonal
-        Button btn1 = buttons[0][2];
-        Button btn2 = buttons[1][1];
-        Button btn3 = buttons[2][0];
+        ImageView iv1 = imageViews[0][0];
+        ImageView iv2 = imageViews[1][1];
+        ImageView iv3 = imageViews[2][2];
 
-        Simbolo sb1 = obtenerSimbolo(btn1);
-        Simbolo sb2 = obtenerSimbolo(btn2);
-        Simbolo sb3 = obtenerSimbolo(btn3);
+        Simbolo s1 = (Simbolo) iv1.getUserData();
+        Simbolo s2 = (Simbolo) iv2.getUserData();
+        Simbolo s3 = (Simbolo) iv3.getUserData();
 
-        if (verificarSimbolosIguales(sb1, sb2, sb3)) {
-            sbGanador = sb1;
+        if (verificarSimbolosIguales(s1, s2, s3)) {
             return true;
         }
         return false;
@@ -254,17 +242,16 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean verificarFila(){
         //verifica si las tres fichas son iguales en la columna
-        for(int i = 0; i<buttons.length;i++){
-            Button btn1 = buttons[0][i];
-            Button btn2 = buttons[1][i];
-            Button btn3 = buttons[2][i];
+        for(int i = 0; i<imageViews.length;i++){
+            ImageView iv1 = imageViews[i][0];
+            ImageView iv2 = imageViews[i][1];
+            ImageView iv3 = imageViews[i][2];
 
-            Simbolo sb1 = obtenerSimbolo(btn1);
-            Simbolo sb2 = obtenerSimbolo(btn2);
-            Simbolo sb3 = obtenerSimbolo(btn3);
+            Simbolo s1 = (Simbolo) iv1.getUserData();
+            Simbolo s2 = (Simbolo) iv2.getUserData();
+            Simbolo s3 = (Simbolo) iv3.getUserData();
 
-            if (verificarSimbolosIguales(sb1, sb2, sb3)) {
-                sbGanador = sb1;
+            if (verificarSimbolosIguales(s1, s2, s3)) {
                 return true;
             }
         }
@@ -292,10 +279,10 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean empate(){
         //verifica si el tablero se ha llenado y ninguno de los dos jugadores ha hecho tres en raya, declarando un empate
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons[i].length; j++) {
-                Button btn = buttons[i][j];
-                Simbolo sb = obtenerSimbolo(btn);
+        for (int i = 0; i < imageViews.length; i++) {
+            for (int j = 0; j < imageViews.length; j++) {
+                ImageView iv = imageViews[i][j];
+                Simbolo sb = (Simbolo) iv.getUserData();
 
                 if (sb == null || sb.getImagen() == null) {
                     return false; // Si alguna celda no está ocupada, no hay empate

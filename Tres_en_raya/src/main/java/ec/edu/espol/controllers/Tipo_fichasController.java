@@ -61,7 +61,7 @@ public class Tipo_fichasController implements Initializable {
         j1.setFont(new javafx.scene.text.Font("Arial", 36));
         j1.setPrefWidth(200);
         j1.setPrefHeight(54);
-        j2=new Label("Jugador "+p1.getId()+" "+p2.getTipoSimbolo());
+        j2=new Label("Jugador "+p2.getId()+" "+p2.getTipoSimbolo());
         j2.setFont(new javafx.scene.text.Font("Arial", 36));
         j2.setPrefWidth(200);
         j2.setPrefHeight(54);

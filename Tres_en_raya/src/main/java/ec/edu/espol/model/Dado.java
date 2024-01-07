@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class Dado {
     private Map<Integer,String> numeros;
+    private Jugador j1;
+    private Jugador j2;
     private String mov;
     private boolean lanzado;
     private ResultadoDado resul;
@@ -44,6 +46,14 @@ public class Dado {
 
         // Devolver el movimiento asociado
         return new ResultadoDado(lado,numeroAleatorio);
+    }
+    public boolean repetirTirada(Jugador j1,Jugador j2){
+        if(j2.getDado()==j1.getDado()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     public String getMov() {
         return mov;
