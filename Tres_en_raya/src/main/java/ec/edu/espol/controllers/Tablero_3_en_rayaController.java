@@ -141,11 +141,11 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         if(tresEnRaya()){
             String jugadorGanador = sbGanador.getJ().getNombre();
-            Util.mostrarMensaje("Ganador", "Felicidades jugador" + jugadorGanador + ", has ganado la partida.");
+            Util.mostrarMensaje("Felicidades jugador " + jugadorGanador + ", has ganado la partida.", "Ganador");
             inicio();
         }else if(empate()){
             System.out.println("HAY UN EMPATE");
-            Util.mostrarMensaje("Empate", "Hay un empate.");
+            Util.mostrarMensaje("Hay un empate.", "Empate");
             inicio();
         }
     }
@@ -196,7 +196,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         return (btn != null) ? (Simbolo) ((ImageView) btn.getGraphic()).getUserData() : null;
     }
     
-    private boolean verificarFila(){
+    private boolean verificarColumna(){
         //verifica si las tres fichas son iguales en la fila
         for(int i = 0; i<buttons.length;i++){
             Button btn1 = buttons[i][0];
@@ -208,10 +208,10 @@ public class Tablero_3_en_rayaController implements Initializable {
             Simbolo sb3 = obtenerSimbolo(btn3);
 
             if (verificarSimbolosIguales(sb1, sb2, sb3)) {
-                System.out.println(sb1.getImagen());
-                System.out.println(sb2.getImagen());
-                System.out.println(sb3.getImagen());
                 sbGanador = sb1;
+                System.out.println("JUGADOR GANADOR" + sb1.getJ().getNombre());
+                System.out.println("JUGADOR GANADOR 2" + sbGanador.getImagen());
+                
                 return true;
             }
         }
@@ -252,7 +252,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         return false;
     }
     
-    private boolean verificarColumna(){
+    private boolean verificarFila(){
         //verifica si las tres fichas son iguales en la columna
         for(int i = 0; i<buttons.length;i++){
             Button btn1 = buttons[0][i];
