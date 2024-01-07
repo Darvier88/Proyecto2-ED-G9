@@ -140,7 +140,12 @@ public class Tablero_3_en_rayaController implements Initializable {
                 iniciarNuevoTurno();
         }
         if(tresEnRaya()){
-            Util.mostrarMensaje("Ganador", "Ganador");
+            String jugadorGanador = sbGanador.getJ().getNombre();
+            Util.mostrarMensaje("Ganador", "Felicidades jugador" + jugadorGanador + ", has ganado la partida.");
+            inicio();
+        }else if(empate()){
+            System.out.println("HAY UN EMPATE");
+            Util.mostrarMensaje("Empate", "Hay un empate.");
             inicio();
         }
     }
@@ -284,6 +289,22 @@ public class Tablero_3_en_rayaController implements Initializable {
             // Manejo de excepciones en caso de error al cargar el FXML
         }
     }
+    
+    private boolean empate(){
+        //verifica si el tablero se ha llenado y ninguno de los dos jugadores ha hecho tres en raya, declarando un empate
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons[i].length; j++) {
+                Button btn = buttons[i][j];
+                Simbolo sb = obtenerSimbolo(btn);
+
+                if (sb == null || sb.getImagen() == null) {
+                    return false; // Si alguna celda no está ocupada, no hay empate
+                }
+            }
+    }
+    return true;
+    }
+
 }
     
     //Crear la funcion empate, la cual ocurre cuando el tablero se ha llenado sin que haya un ganador
