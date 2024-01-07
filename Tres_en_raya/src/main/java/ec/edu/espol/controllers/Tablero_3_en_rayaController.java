@@ -133,8 +133,10 @@ public class Tablero_3_en_rayaController implements Initializable {
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
             case PUT:
-                ponerFicha(iv);
-                iniciarNuevoTurno();
+                boolean estado = ponerFicha(iv);
+                if(estado){
+                    iniciarNuevoTurno();
+                }
                 visualizarTurno(turno);
         }
         if(tresEnRaya()){
@@ -157,10 +159,12 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Simbolo asignarSimbolo(Jugador actual) {
         return new Simbolo("ec/edu/espol/images/"+actual.getTipoSimbolo()+".png",actual);
     }
-    private void ponerFicha(ImageView iv){
+    private boolean ponerFicha(ImageView iv){
+        //devuelve false cuando la casilla esta ocupada
         Simbolo s = (Simbolo) iv.getUserData();
         if(s.getImagen()!=null && s.getJ()!=null){
             Util.mostrarMensaje("Esta casilla ya está ocupada. Por favor, elige otra.", "Casilla Ocupada");
+            return false;
         }
         else{
             s.setImagen(fichaActual.getImagen());
@@ -170,6 +174,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             iv.setFitHeight(altoIm);
             iv.setUserData(s);
         }
+        return true;
     }
     private void iniciarNuevoTurno(){
         turno++;
