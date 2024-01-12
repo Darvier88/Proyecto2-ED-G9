@@ -17,7 +17,7 @@ public class Util {
         alerta.setTitle(title);
         alerta.setHeaderText(null); 
         alerta.setContentText(mensaje);
-        alerta.showAndWait();
+        alerta.show();
     }
     
     public static void mostrarMensaje(String mensaje,String title, String header) {

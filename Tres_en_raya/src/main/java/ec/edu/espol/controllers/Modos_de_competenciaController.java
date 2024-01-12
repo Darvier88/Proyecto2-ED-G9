@@ -6,6 +6,8 @@ package ec.edu.espol.controllers;
 
 import ec.edu.espol.TDAs.CircularLinkedList;
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Resultado;
+import ec.edu.espol.model.TipoResul;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class Modos_de_competenciaController implements Initializable {
     private CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
     private ListIterator<String> it = imagenesTrad.listIterator();
     private ScaleTransition scaleTransition;
+    private Resultado r;
     @FXML
     private ImageView leftarrow;
     @FXML
@@ -59,10 +62,13 @@ public class Modos_de_competenciaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+    }  
+    public void inicializar(Resultado r){
+        this.r=r;
         mapa.put("j_vs_cpu.png", "J vs CPU");
         mapa.put("cpu_vs_cpu.png", "CPU vs CPU");
         mapa.put("j_vs_j.png", "J vs J");
-    }  
+    }
     
     @FXML
     private void restaurarImg(MouseEvent event) {
@@ -100,28 +106,87 @@ public class Modos_de_competenciaController implements Initializable {
     
     @FXML
     private void elegido(MouseEvent event) throws IOException {
-        if(!fichas.isSelected()){
-            ArrayList<Jugador> players = Jugador.randomizarSimbolos();
-            Jugador j1 = players.get(0);
-            Jugador j2 = players.get(1);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
-            Parent fichasParent = loader.load();
-            Scene fichasScene = new Scene(fichasParent,680,480);
-            Tipo_fichasController tipoFichasController = loader.getController();
-            tipoFichasController.inicializar(j1, j2);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(fichasScene);
-            window.show();    
+        String mode = labelmodes.getText();
+        if(mode.equals("J vs CPU")){
+            if(!fichas.isSelected()){
+                ArrayList<Jugador> players = Jugador.randomizarSimbolos();
+                Jugador j1 = players.get(0);
+                Jugador j2 = players.get(1);
+                j2.setCpu(true);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Tipo_fichasController tipoFichasController = loader.getController();
+                tipoFichasController.inicializar(j1, j2,r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show();    
+            }
+            else{
+                boolean cpu1=false;
+                boolean cpu2= true;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show(); 
+            }
+        }
+        else if(mode.equals("CPU vs CPU")){
+            if(!fichas.isSelected()){
+                ArrayList<Jugador> players = Jugador.randomizarSimbolos();
+                Jugador j1 = players.get(0);
+                j1.setCpu(true);
+                Jugador j2 = players.get(1);
+                j2.setCpu(true);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Tipo_fichasController tipoFichasController = loader.getController();
+                tipoFichasController.inicializar(j1, j2,r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show();    
+            }
+            else{
+                boolean cpu1= true;
+                boolean cpu2=true;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show(); 
+            }
         }
         else{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
-            Parent fichasParent = loader.load();
-            Scene fichasScene = new Scene(fichasParent,680,480);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(fichasScene);
-            window.show(); 
+            if(!fichas.isSelected()){
+                ArrayList<Jugador> players = Jugador.randomizarSimbolos();
+                Jugador j1 = players.get(0);
+                Jugador j2 = players.get(1);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Tipo_fichasController tipoFichasController = loader.getController();
+                tipoFichasController.inicializar(j1, j2,r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show();    
+            }
+            else{
+                boolean cpu1=false;
+                boolean cpu2= false;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
+                Parent fichasParent = loader.load();
+                Scene fichasScene = new Scene(fichasParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(fichasScene);
+                window.show(); 
+            }
         }
     }
+    
     
     
 }

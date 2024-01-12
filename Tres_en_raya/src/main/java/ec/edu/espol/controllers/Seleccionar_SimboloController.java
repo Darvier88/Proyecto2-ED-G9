@@ -5,6 +5,8 @@
 package ec.edu.espol.controllers;
 
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Resultado;
+import ec.edu.espol.model.TipoResul;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,13 +33,21 @@ public class Seleccionar_SimboloController implements Initializable {
     private StackPane sp1;
     @FXML
     private StackPane sp2;
+    private Resultado r;
+    private boolean cpu1;
+    private boolean cpu2;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+       
+    } 
+    public void inicializar(Resultado r, boolean cpu1,boolean cpu2){
+        this.r=r;
+        this.cpu1=cpu1;
+        this.cpu2=cpu2;
         Image im1 = new Image("ec/edu/espol/images/papel_simbolo1.png");
         Image im2 = new Image("ec/edu/espol/images/X.png");
         ImageView iv1 = new ImageView(im1);
@@ -65,7 +75,7 @@ public class Seleccionar_SimboloController implements Initializable {
         iv4.setFitWidth(175);
         iv4.setUserData("O");
         sp2.getChildren().addAll(iv3,iv4);
-    }    
+    }
     private void fichaElegida(MouseEvent event) throws IOException{
         ImageView imageViewClickeado = (ImageView) event.getSource();
         String tipoFicha = (String) imageViewClickeado.getUserData();
@@ -79,11 +89,13 @@ public class Seleccionar_SimboloController implements Initializable {
             j1 = new Jugador(1,tipoFicha);
             j2= new Jugador(2,"X");
         }
+        j1.setCpu(cpu1);
+        j2.setCpu(cpu1);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
         Parent fichasParent = loader.load();
         Scene fichasScene = new Scene(fichasParent,680,480);
         Tipo_fichasController tipoFichasController = loader.getController();
-        tipoFichasController.inicializar(j1, j2);
+        tipoFichasController.inicializar(j1, j2,r);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(fichasScene);
         window.show(); 

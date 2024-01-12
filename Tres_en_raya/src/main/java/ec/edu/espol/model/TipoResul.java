@@ -8,6 +8,6 @@ package ec.edu.espol.model;
  *
  * @author ASUS VIVOBOOK PRO
  */
-public enum GamePhase {
-    STANDBY,PUT,END
+public enum TipoResul {
+    PorVidas,PorPuntaje
 }

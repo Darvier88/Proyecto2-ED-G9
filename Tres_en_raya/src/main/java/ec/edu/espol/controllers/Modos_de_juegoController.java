@@ -93,7 +93,7 @@ public class Modos_de_juegoController implements Initializable {
 
     @FXML
     private void elegidoT(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_competencia.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_resultados.fxml"));
         Parent jugadoresTParent = loader.load();
         Scene jugadoresTScene = new Scene(jugadoresTParent,680,480);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

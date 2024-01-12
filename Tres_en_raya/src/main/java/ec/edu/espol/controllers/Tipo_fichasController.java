@@ -5,6 +5,8 @@
 package ec.edu.espol.controllers;
 
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Resultado;
+import ec.edu.espol.model.TipoResul;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class Tipo_fichasController implements Initializable {
 
     private Label j1;
     private Label j2;
+    private Resultado r;
     
     private Jugador p1;
     private Jugador p2;
@@ -50,7 +53,8 @@ public class Tipo_fichasController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }  
-    public void inicializar(Jugador player1,Jugador player2){
+    public void inicializar(Jugador player1,Jugador player2, Resultado r){
+        this.r=r;
         Image im1 = new Image("ec/edu/espol/images/trozoJ1.png");
         Image im2 = new Image("ec/edu/espol/images/trozoJ2.png");
         ImageView iv1 = new ImageView(im1);
@@ -77,7 +81,7 @@ public class Tipo_fichasController implements Initializable {
         Parent dadosParent = loader.load();
         Scene dadosScene = new Scene(dadosParent,680,480);
         Lanzada_dadosController lanzadaDadosController = loader.getController();
-        lanzadaDadosController.inicializar(p1, p2);
+        lanzadaDadosController.inicializar(p1, p2,r);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(dadosScene);
         window.show();

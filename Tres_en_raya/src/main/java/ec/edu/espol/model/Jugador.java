@@ -16,30 +16,35 @@ public class Jugador {
     private String nombre;
     private String tipoSimbolo;
     private int dado;
+    private boolean cpu;
 
     public Jugador(int id, String nombre, String tipoSimbolo) {
         this.id = id;
         this.nombre = nombre;
         this.tipoSimbolo = tipoSimbolo;
         this.dado=0;
+        this.cpu=false;
     }
     public Jugador() {
         this.id = 0;
         this.nombre = null;
         this.tipoSimbolo = null;
         this.dado=0;
+        this.cpu=false;
     }
     public Jugador(String nombre) {
         this.id = 0;
         this.nombre = nombre;
         this.tipoSimbolo = null;
         this.dado=0;
+        this.cpu=false;
     }
     public Jugador(int id,String tipoS) {
         this.id = id;
         this.nombre = null;
         this.tipoSimbolo = tipoS;
         this.dado=0;
+        this.cpu=false;
     }
     public int getId() {
         return id;
@@ -49,6 +54,14 @@ public class Jugador {
         this.id = id;
     }
 
+    public boolean isCpu() {
+        return cpu;
+    }
+
+    public void setCpu(boolean cpu) {
+        this.cpu = cpu;
+    }
+    
     public String getNombre() {
         return nombre;
     }
