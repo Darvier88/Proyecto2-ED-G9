@@ -7,7 +7,9 @@ package ec.edu.espol.controllers;
 import ec.edu.espol.model.GamePhase;
 import static ec.edu.espol.model.GamePhase.STANDBY;
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Resultado;
 import ec.edu.espol.model.Simbolo;
+import ec.edu.espol.model.TipoResul;
 import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
@@ -51,6 +53,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Simbolo ficha;
     private int anchoIm = 80;
     private int altoIm = 80;
+    private Resultado r;
     @FXML
     private GridPane gp;
 
@@ -61,7 +64,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-    public void inicializar( Jugador p1,Jugador p2){
+    public void inicializar( Jugador p1,Jugador p2,Resultado r){
+        this.r=r;
         j1=p1;
         j2=p2;
         this.compararNum();
@@ -134,19 +138,27 @@ public class Tablero_3_en_rayaController implements Initializable {
                 currentPhase=GamePhase.PUT;
             case PUT:
                 boolean estado = ponerFicha(iv);
+                System.out.println(estado);
                 if(estado){
-                    iniciarNuevoTurno();
+                    currentPhase=GamePhase.END;
+                }
+                else{
+                    break;
                 }
                 visualizarTurno(turno);
+            case END:
+                if(tresEnRaya()){
+                    Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
+                }else if(empate()){
+                    System.out.println("HAY UN EMPATE");
+                    Util.mostrarMensaje("Hay un empate.", "Empate");
+                }
+                else{
+                    this.iniciarNuevoTurno();
+                    currentPhase= GamePhase.STANDBY;
+                }
         }
-        if(tresEnRaya()){
-            Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
-            inicio();
-        }else if(empate()){
-            System.out.println("HAY UN EMPATE");
-            Util.mostrarMensaje("Hay un empate.", "Empate");
-            inicio();
-        }
+        
     }
     private void asignarJActual(int t){
         if(t%2==1){
@@ -161,10 +173,13 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private boolean ponerFicha(ImageView iv){
         //devuelve false cuando la casilla esta ocupada
+        boolean estado= false;
         Simbolo s = (Simbolo) iv.getUserData();
         if(s.getImagen()!=null && s.getJ()!=null){
+            System.out.println("Hola");
             Util.mostrarMensaje("Esta casilla ya está ocupada. Por favor, elige otra.", "Casilla Ocupada");
-            return false;
+            System.out.println("Hola2");
+            estado=false;
         }
         else{
             s.setImagen(fichaActual.getImagen());
@@ -173,12 +188,12 @@ public class Tablero_3_en_rayaController implements Initializable {
             iv.setFitWidth(anchoIm);
             iv.setFitHeight(altoIm);
             iv.setUserData(s);
+            estado=true;
         }
-        return true;
-    }
+        return estado;
+        }
     private void iniciarNuevoTurno(){
         turno++;
-        currentPhase= GamePhase.STANDBY;
     }
     
     private boolean tresEnRaya(){

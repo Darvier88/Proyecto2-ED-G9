@@ -6,7 +6,9 @@ package ec.edu.espol.controllers;
 
 import ec.edu.espol.model.Dado;
 import ec.edu.espol.model.Jugador;
+import ec.edu.espol.model.Resultado;
 import ec.edu.espol.model.ResultadoDado;
+import ec.edu.espol.model.TipoResul;
 import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
@@ -45,6 +47,7 @@ public class Lanzada_dadosController implements Initializable {
     private int lanzadas=2;
     @FXML
     private Label mensaje;
+    private Resultado r;
 
     /**
      * Initializes the controller class.
@@ -52,7 +55,8 @@ public class Lanzada_dadosController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }    
-    public void inicializar(Jugador j1,Jugador j2){
+    public void inicializar(Jugador j1,Jugador j2,Resultado r){
+        this.r=r;
         p1=j1;
         p2=j2;
         dice=new Dado();
@@ -74,7 +78,7 @@ public class Lanzada_dadosController implements Initializable {
                 if(dice.repetirTirada(p1, p2)){
                     lanzadas++;
                     dice.reiniciar();
-                    Util.mostrarMensaje("Repita el lanzamiento", "Numeros iguales");
+                    Util.mostrarMensaje("Ha ocurrido un empate, jugador 2 repita su lanzamiento", "Numeros iguales");
                     return;
                 }
                 dice.reiniciar();
@@ -120,7 +124,7 @@ public class Lanzada_dadosController implements Initializable {
         Parent tableroParent = loader.load();
         Scene tableroScene = new Scene(tableroParent,680,480);
         Tablero_3_en_rayaController tableroController = loader.getController();
-        tableroController.inicializar(p1, p2);
+        tableroController.inicializar(p1, p2,r);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(tableroScene);
         window.show();
