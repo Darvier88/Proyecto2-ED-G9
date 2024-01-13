@@ -20,7 +20,7 @@ public class Modos_resultadosController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
     
 }
