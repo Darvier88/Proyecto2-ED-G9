@@ -81,13 +81,13 @@ public class Seleccionar_SimboloController implements Initializable {
         String tipoFicha = (String) imageViewClickeado.getUserData();
         Jugador j1;
         Jugador j2;
-        if(tipoFicha.equals("X")){
-            j1 = new Jugador(1,tipoFicha);
-            j2= new Jugador(2,"O");
+        if(tipoFicha.equals("X") && r.getTipoResul().equals(TipoResul.PorVidas)){
+            j1 = new Jugador(1,tipoFicha,0);
+            j2= new Jugador(2,"O",0);
         }
         else{
-            j1 = new Jugador(1,tipoFicha);
-            j2= new Jugador(2,"X");
+            j1 = new Jugador(1,tipoFicha,r.getCantidad());
+            j2= new Jugador(2,"X",r.getCantidad());
         }
         j1.setCpu(cpu1);
         j2.setCpu(cpu1);

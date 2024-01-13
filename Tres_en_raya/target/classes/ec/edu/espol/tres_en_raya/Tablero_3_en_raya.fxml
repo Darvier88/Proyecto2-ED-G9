@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url('ec/edu/espol/images/pizarra.jpg'); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controllers.Tablero_3_en_rayaController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url('ec/edu/espol/images/pizarra.jpg'); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controllers.Tablero_3_en_rayaController">
    <top>
       <StackPane fx:id="sp1" prefHeight="74.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </top>
@@ -31,12 +31,12 @@
       </StackPane>
    </center>
    <left>
-      <VBox prefHeight="226.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+      <VBox fx:id="p1" prefHeight="238.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </left>
    <right>
-      <VBox prefHeight="226.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+      <VBox fx:id="p2" prefHeight="226.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </right>
    <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <HBox prefHeight="64.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

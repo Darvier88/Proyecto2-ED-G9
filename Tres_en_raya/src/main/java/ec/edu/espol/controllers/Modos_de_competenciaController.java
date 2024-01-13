@@ -113,6 +113,10 @@ public class Modos_de_competenciaController implements Initializable {
                 Jugador j1 = players.get(0);
                 Jugador j2 = players.get(1);
                 j2.setCpu(true);
+                if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                    j1.setPuntuacion(r.getCantidad());
+                    j2.setPuntuacion(r.getCantidad());
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);
@@ -140,6 +144,10 @@ public class Modos_de_competenciaController implements Initializable {
                 j1.setCpu(true);
                 Jugador j2 = players.get(1);
                 j2.setCpu(true);
+                if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                    j1.setPuntuacion(r.getCantidad());
+                    j2.setPuntuacion(r.getCantidad());
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);
@@ -165,6 +173,10 @@ public class Modos_de_competenciaController implements Initializable {
                 ArrayList<Jugador> players = Jugador.randomizarSimbolos();
                 Jugador j1 = players.get(0);
                 Jugador j2 = players.get(1);
+                if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                    j1.setPuntuacion(r.getCantidad());
+                    j2.setPuntuacion(r.getCantidad());
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);

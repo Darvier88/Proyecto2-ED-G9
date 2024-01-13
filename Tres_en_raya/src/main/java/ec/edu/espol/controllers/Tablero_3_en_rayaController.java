@@ -13,10 +13,12 @@ import ec.edu.espol.model.TipoResul;
 import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,7 +28,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -54,8 +59,14 @@ public class Tablero_3_en_rayaController implements Initializable {
     private int anchoIm = 80;
     private int altoIm = 80;
     private Resultado r;
+    private boolean victory;
+    private boolean empate;
     @FXML
     private GridPane gp;
+    @FXML
+    private VBox p1;
+    @FXML
+    private VBox p2;
 
     /**
      * Initializes the controller class.
@@ -72,6 +83,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         turno++;
         visualizarTurno(turno);
         inicializarTablero();
+        inicializarResultado();
     }
     private void compararNum(){
         if(j1.getDado()>=j2.getDado()){
@@ -127,12 +139,94 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         }
     }
-
+    private void inicializarResultado(){
+        p1.getChildren().clear();
+        p2.getChildren().clear();
+        TipoResul resul = r.getTipoResul();
+        int cantidad = r.getCantidad();
+        if(resul.equals(TipoResul.PorVidas)){
+            Label lb1 = new Label();
+            lb1.setFont(new Font(24));
+            lb1.setTextFill(Color.WHITE);
+            lb1.setText("J1");
+            StackPane root = new StackPane();
+            root.getChildren().add(lb1);
+            StackPane.setAlignment(lb1, javafx.geometry.Pos.CENTER);
+            Label lb2 = new Label();
+            lb2.setFont(new Font(24));
+            lb2.setTextFill(Color.WHITE);
+            lb2.setText("J2");
+            StackPane root2 = new StackPane();
+            root2.getChildren().add(lb2);
+            StackPane.setAlignment(lb2, javafx.geometry.Pos.CENTER);
+            p1.getChildren().add(root);
+            p2.getChildren().add(root2);
+            for(int i=0; i<primero.getPuntuacion();i++){
+                StackPane sp = new StackPane();
+                Image im = new Image("ec/edu/espol/images/corazon.png");
+                ImageView iv =new ImageView(im);
+                iv.setFitHeight(63);
+                iv.setFitWidth(54);
+                sp.getChildren().add(iv);
+                p1.getChildren().add(sp);
+            }
+            for(int i=0;i<segundo.getPuntuacion();i++){
+                StackPane sp2=new StackPane();
+                Image im = new Image("ec/edu/espol/images/corazon.png");
+                ImageView iv2 = new ImageView(im);
+                iv2.setFitHeight(63);
+                iv2.setFitWidth(54);
+                sp2.getChildren().add(iv2);
+                p2.getChildren().add(sp2);
+            }
+        }
+        else{
+           Label lb1 = new Label();
+           lb1.setPrefHeight(115);
+           Label lb2 = new Label();
+           lb2.setPrefHeight(115);
+           p1.getChildren().add(lb1);
+           p2.getChildren().add(lb2);
+           StackPane root = new StackPane();
+           StackPane root2 = new StackPane();
+           Label lb3 = new Label();
+           lb3.setFont(new Font(36));
+           lb3.setTextFill(Color.WHITE);
+           lb3.setText("J1");
+           root.getChildren().add(lb3);
+           StackPane.setAlignment(lb3, javafx.geometry.Pos.CENTER);
+           Label lb4 = new Label();
+           lb4.setFont(new Font(36));
+           lb4.setTextFill(Color.WHITE);
+           lb4.setText("J2");
+           root2.getChildren().add(lb4);
+           StackPane.setAlignment(lb4, javafx.geometry.Pos.CENTER);
+           p1.getChildren().add(root);
+           p2.getChildren().add(root2);
+           Label puntuacion = new Label();
+           puntuacion.setFont(new Font(36));
+           puntuacion.setTextFill(Color.WHITE);
+           puntuacion.setText("0");
+           StackPane root3 = new StackPane();
+           root3.getChildren().add(puntuacion);
+           StackPane.setAlignment(puntuacion, Pos.CENTER);
+           p1.getChildren().add(root3);
+           Label puntuacion2 = new Label();
+           puntuacion2.setFont(new Font(36));
+           puntuacion2.setTextFill(Color.WHITE);
+           puntuacion2.setText("0");
+           StackPane root4 = new StackPane();
+           root4.getChildren().add(puntuacion2);
+           StackPane.setAlignment(puntuacion2, Pos.CENTER);
+           p2.getChildren().add(root4);
+        }
+    }
     private void ponerSimbolo(MouseEvent event) {
         Button b = (Button) event.getSource();
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
             case STANDBY:
+                inicializarResultado();
                 asignarJActual(turno);
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
@@ -145,20 +239,54 @@ public class Tablero_3_en_rayaController implements Initializable {
                 else{
                     break;
                 }
-                visualizarTurno(turno);
+                victory=tresEnRaya();
+                empate=empate();
             case END:
-                if(tresEnRaya()){
-                    Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
-                }else if(empate()){
-                    System.out.println("HAY UN EMPATE");
+                if(!victory&&!empate){
+                    this.iniciarNuevoTurno();
+                    visualizarTurno(turno);
+                    currentPhase= GamePhase.STANDBY;
+                }
+                else if(empate){
+                    empatePunt();
                     Util.mostrarMensaje("Hay un empate.", "Empate");
                 }
-                else{
-                    this.iniciarNuevoTurno();
-                    currentPhase= GamePhase.STANDBY;
+                else if(victory){
+                    modificarPuntuacion(actual,cmp);
+                     Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
                 }
         }
         
+    }
+    public Comparator<Jugador> cmp = new Comparator<>() {
+        @Override
+        public int compare(Jugador o1, Jugador o2) {
+            return o1.getId()-o2.getId();
+        }
+    };
+    private void empatePunt(){
+        if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+            primero.sumarPuntuacion(1);
+            segundo.sumarPuntuacion(1);
+        }
+    }
+    private void modificarPuntuacion(Jugador j,Comparator cmp){
+        if(cmp.compare(primero, j)==0){
+            if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                primero.restarPuntuacion(1);
+            }
+            else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+                primero.sumarPuntuacion(1);
+            }
+        }
+        else if(cmp.compare(segundo, j)==0){
+            if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                segundo.restarPuntuacion(1);
+            }
+            else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+                segundo.sumarPuntuacion(1);
+            }
+        }
     }
     private void asignarJActual(int t){
         if(t%2==1){

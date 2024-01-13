@@ -17,13 +17,15 @@ public class Jugador {
     private String tipoSimbolo;
     private int dado;
     private boolean cpu;
+    private int puntuacion;
 
-    public Jugador(int id, String nombre, String tipoSimbolo) {
+    public Jugador(int id, String nombre, String tipoSimbolo,int puntuacion) {
         this.id = id;
         this.nombre = nombre;
         this.tipoSimbolo = tipoSimbolo;
         this.dado=0;
         this.cpu=false;
+        this.puntuacion=puntuacion;
     }
     public Jugador() {
         this.id = 0;
@@ -39,12 +41,13 @@ public class Jugador {
         this.dado=0;
         this.cpu=false;
     }
-    public Jugador(int id,String tipoS) {
+    public Jugador(int id,String tipoS,int puntuacion) {
         this.id = id;
         this.nombre = null;
         this.tipoSimbolo = tipoS;
         this.dado=0;
         this.cpu=false;
+        this.puntuacion=puntuacion;
     }
     public int getId() {
         return id;
@@ -104,4 +107,19 @@ public class Jugador {
         }
         return players;
     }
+    public void sumarPuntuacion(int n){
+        puntuacion+=n;
+    }
+    public void restarPuntuacion(int n){
+        puntuacion=puntuacion-n;
+    }
+
+    public int getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(int puntuacion) {
+        this.puntuacion = puntuacion;
+    }
+    
 }
