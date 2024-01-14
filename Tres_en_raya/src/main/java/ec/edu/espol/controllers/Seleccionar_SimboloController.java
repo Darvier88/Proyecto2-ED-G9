@@ -68,6 +68,7 @@ public class Seleccionar_SimboloController implements Initializable {
         iv4.setFitHeight(175);
         iv4.setFitWidth(175);
         iv4.setUserData("O");
+        iv4.setOnMouseClicked(this::fichaElegida);
         sp2.getChildren().addAll(iv3,iv4);
     }
     private void fichaElegida(MouseEvent event){

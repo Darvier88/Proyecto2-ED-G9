@@ -373,9 +373,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean verificarDiagonalSecundaria(){
         //verifica si las tres fichas son iguales en la diagonal
-        ImageView iv1 = imageViews[0][0];
+        ImageView iv1 = imageViews[0][2];
         ImageView iv2 = imageViews[1][1];
-        ImageView iv3 = imageViews[2][2];
+        ImageView iv3 = imageViews[2][0];
 
         Simbolo s1 = (Simbolo) iv1.getUserData();
         Simbolo s2 = (Simbolo) iv2.getUserData();
@@ -390,9 +390,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean verificarFila(){
         //verifica si las tres fichas son iguales en la columna
         for(int i = 0; i<imageViews.length;i++){
-            ImageView iv1 = imageViews[i][0];
-            ImageView iv2 = imageViews[i][1];
-            ImageView iv3 = imageViews[i][2];
+            ImageView iv1 = imageViews[0][i];
+            ImageView iv2 = imageViews[1][i];
+            ImageView iv3 = imageViews[2][i];
 
             Simbolo s1 = (Simbolo) iv1.getUserData();
             Simbolo s2 = (Simbolo) iv2.getUserData();
