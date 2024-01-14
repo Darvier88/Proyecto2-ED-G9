@@ -92,7 +92,7 @@ public class Seleccionar_SimboloController implements Initializable {
             j2= new Jugador(2,"O",0);
         }
         j1.setCpu(cpu1);
-        j2.setCpu(cpu1);
+        j2.setCpu(cpu2);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
         Parent fichasParent=null;
         try{
