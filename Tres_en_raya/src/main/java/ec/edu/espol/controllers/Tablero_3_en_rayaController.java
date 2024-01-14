@@ -111,6 +111,16 @@ public class Tablero_3_en_rayaController implements Initializable {
             segundo=j1;
         }
     }
+    
+    private boolean verificarJ1Primero(){
+        //retorna true cuando el valor del dado de j1 es mayor a j2, verificando que j1 es primero
+        //retorna false cuando el valor del dado de j1 es menor a j2, verificando que j2 es primero
+        if(j1.getDado()>=j2.getDado()){
+            return true;
+        }
+            return false;
+    }
+    
     private void visualizarTurno(int t){
         mensaje= new Label();
         sp1.getChildren().clear();
@@ -271,6 +281,9 @@ public class Tablero_3_en_rayaController implements Initializable {
                     if(emp()){
                         break;
                     }
+                    else if(victoria()){
+                        break;
+                    }
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(victory){
@@ -294,7 +307,20 @@ public class Tablero_3_en_rayaController implements Initializable {
         if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
             primero.sumarPuntuacion(1);
             segundo.sumarPuntuacion(1);
-            reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+            if(verificarJ1Primero()){
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+            }
+            else{
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
+        }
+        else{
+            if(verificarJ1Primero()){
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+            }
+            else{
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
         }
     }
     private boolean victoria(){
@@ -744,29 +770,19 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         return indices;
     }
+
+    @FXML
+    public void terminarJuego(MouseEvent event) throws IOException {
+        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
     }
-    
 
-
-
-    
-        
-        
-
-        
-
-
-//    public void terminarJuego(MouseEvent event) throws IOException {
-//        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
-//        Parent Modos_de_juegoParent = loader.load();
-//        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
-//        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        window.setScene(Modos_de_juegoScene);
-//        window.show(); 
-//    }
-
-
+}
 
    
 
