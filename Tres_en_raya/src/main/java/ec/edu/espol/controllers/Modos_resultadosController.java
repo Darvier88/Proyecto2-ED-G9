@@ -17,6 +17,7 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -67,10 +68,14 @@ public class Modos_resultadosController implements Initializable {
 
     @FXML
     private void cambiarImgL(MouseEvent event) {
+        //System.out.println(it.previous());
         String name = it.previous();
+        
+        System.out.println(name);
         Image img = new Image("ec/edu/espol/images/"+name);
         modes.setImage(img);
         labelmodes.setText(mapa.get(name));
+        System.out.println("    que LLLLL");
     }
 
     @FXML
@@ -130,14 +135,38 @@ public class Modos_resultadosController implements Initializable {
 
     @FXML
     private void cambiarCantL(MouseEvent event) {
+        
         String name = it2.previous();
         cantidad.setText(name);
     }
 
     @FXML
     private void cambiarCantR(MouseEvent event) {
+       
         String name = it2.next();
         cantidad.setText(name);
     }
+
+    @FXML
+    private void handCambiarImgL(MouseEvent event) {
+        leftarrow.setCursor(Cursor.HAND);
+        
+    }
+
+    @FXML
+    private void handCambiarImgR(MouseEvent event) {
+        rightarrow.setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    private void handCambiarCantL(MouseEvent event) {
+        this.cantidadL.setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    private void handCambiarCantR(MouseEvent event) {
+        this.cantidadR.setCursor(Cursor.HAND);
+    }
+    
     
 }

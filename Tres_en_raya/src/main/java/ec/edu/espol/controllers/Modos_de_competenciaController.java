@@ -42,7 +42,7 @@ public class Modos_de_competenciaController implements Initializable {
     private ImageView tradicional;
     private int indiceImg=0;
     private Map<String, String> mapa = new HashMap<>();
-    private String[] imagesTempTrad ={"j_vs_cpu.png","cpu_vs_cpu.png", "j_vs_j.png"};
+    private String[] imagesTempTrad ={"j_vs_j.png","j_vs_cpu.png","cpu_vs_cpu.png" };
     private CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
     private ListIterator<String> it = imagenesTrad.listIterator();
     private ScaleTransition scaleTransition;
@@ -99,6 +99,7 @@ public class Modos_de_competenciaController implements Initializable {
     @FXML
     private void cambiarImgL(MouseEvent event){
         String name = it.previous();
+        System.out.println(name);
         Image img = new Image("ec/edu/espol/images/"+name);
         modes.setImage(img);
         labelmodes.setText(mapa.get(name));

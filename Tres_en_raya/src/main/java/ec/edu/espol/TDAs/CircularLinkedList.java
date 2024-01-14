@@ -346,7 +346,7 @@ public class CircularLinkedList<E> implements List<E>{
     
     public ListIterator<E> listIterator(){
         int size = this.size();
-        System.out.println(size);
+        //System.out.println(size);
         ListIterator<E> listIt = new ListIterator<>(){
             private CircularNode<E> cursor = last.getNext();
             int c = 0;
@@ -360,7 +360,7 @@ public class CircularLinkedList<E> implements List<E>{
                 E tmp = cursor.getData();
                 cursor = cursor.getNext();
                 c++;
-                return tmp;
+                return cursor.getData();
             }
 
             @Override
@@ -374,7 +374,7 @@ public class CircularLinkedList<E> implements List<E>{
                 E tmp = cursor.getData();
                 cursor = cursor.getPrevious();
                 c--;
-                return tmp;
+                return cursor.getData();
             }
 
             @Override
