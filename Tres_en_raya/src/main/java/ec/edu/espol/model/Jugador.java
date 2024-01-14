@@ -15,6 +15,7 @@ public class Jugador {
     private int id;
     private String nombre;
     private String tipoSimbolo;
+    private int intsimbolo; //x=1 o=2
     private int dado;
     private boolean cpu;
     private int puntuacion;
@@ -121,5 +122,14 @@ public class Jugador {
     public void setPuntuacion(int puntuacion) {
         this.puntuacion = puntuacion;
     }
+
+    public int getIntsimbolo() {
+        return intsimbolo;
+    }
+
+    public void setIntsimbolo(int intsimbolo) {
+        this.intsimbolo = intsimbolo;
+    }
+    
     
 }

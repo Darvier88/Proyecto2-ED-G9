@@ -4,6 +4,7 @@
  */
 package ec.edu.espol.controllers;
 
+import ec.edu.espol.TDAs.Tree;
 import ec.edu.espol.model.GamePhase;
 import static ec.edu.espol.model.GamePhase.STANDBY;
 import ec.edu.espol.model.Jugador;
@@ -14,6 +15,7 @@ import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -438,6 +440,150 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     return true;
     }
+    
+    public void IA_inicio(Jugador j, int[][] tableroActual){
+        //x=1 o=2
+        //CPU empieza;
+        int s=j.getIntsimbolo();
+        int s2=0;
+        if(s==1){
+        s2=2;
+        }
+        else{
+        s2=1;
+        }
+        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+       
+            
+        Tree<int[][]> juego= new Tree(matIni);
+        
+        
+        int[][] copia=tableroActual.clone();
+
+        llenarTree_Nivel_1(juego, copia, s);
+        for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+            int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+            llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+        }
+ 
+    }
+    
+    
+    public void llenarTree_Nivel_1(Tree juego, int[][] copia, int s){
+        
+        for (int i = 0; i < 3; i++) {
+            for (int k = 0; k < 3; k++) {
+                if(copia[i][k]==0){
+                  copia[i][k]=s;
+                  int[][] agregar = new int[3][3];
+                  agregar[i][k]=s;
+                  juego.addChildren(new Tree(agregar));
+                }
+            }
+            
+        }
+    }
+    public void llenarTree_Nivel_2(Tree t, int[][] copia, int s){
+        // analiza jug 2
+        
+        for (int i = 0; i < 3; i++){
+            for (int k = 0; k < 3; k++) {
+                if(copia[i][k]==0){
+                  copia[i][k]=s;
+                  int [][] ag=t.getRoot().clone();
+                  ag[i][k]=s;
+                  Tree<int[][]> ag2= new Tree(ag);
+                  int s2=0;
+                  if(s==1){
+                    s2=2;
+                  }
+                  else{
+                    s2=1;
+                  }
+                  ag2.getRootNode().setUtilidad(getUtility(ag, s2)-getUtility(ag, s));
+                  t.addChildren(ag2);
+
+            } }  } 
+        
+    }
+    public void llenarTree_Nivel_N(Tree t, int[][] copia, int s){
+
+    }
+
+    public int getUtility(int[][] m, int s){
+        
+        return this.calcColsU(s, m)+this.calcRowsU(s, m)+this.calcDiagsU(s, m);
+        
+    
+    }
+
+            
+
+    public int calcRowsU(int s, int[][] m){
+        int ret=0;
+        
+        int iter=0;
+        for (int i = 0; i < 3; i++) {
+            iter=0;
+            for (int j = 0; j < 3; j++) {
+                if(m[i][j]==s || m[i][j]==0 )
+                    iter++;
+            }
+            if (iter==3)
+                ret++;
+            
+        }
+        return ret;
+    }
+    
+    public int calcColsU(int s, int[][] m){
+        int ret=0;
+        
+        int iter=0;
+        for (int i = 0; i < 3; i++) {
+            iter=0;
+            for (int j = 0; j < 3; j++) {
+                if(m[j][i]==s || m[j][i]==0 )
+                    iter++;
+            }
+            if (iter==3)
+                ret++;
+            
+        }
+        return ret;
+    }
+    
+    public int calcDiagsU(int s, int[][] m){
+        int ret=0;
+        
+        int iter=0;
+        for (int i = 0; i < 3; i++) {
+            if(m[i][i]==s || m[i][i]==0 )
+                iter++; 
+        }
+        if (iter==3)
+                ret++;
+        
+        int j=2;
+        iter=0;
+        for (int i = 0; i < 3; i++) {
+            if(m[i][j]==s || m[i][j]==0 )
+                iter++; 
+                j--;
+        }
+        if (iter==3)
+                ret++;
+        return ret;
+    }
+    
+
+
+
+    
+        
+        
+
+        
 
 }
     

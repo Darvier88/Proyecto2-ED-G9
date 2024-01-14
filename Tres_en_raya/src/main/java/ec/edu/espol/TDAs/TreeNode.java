@@ -15,7 +15,7 @@ import java.util.List;
 public class TreeNode<E> {
     private int[][] matriz;
     private List<Tree> children;
-    private int utilidad_asociada;
+    private int utilidad;
 
     public TreeNode(int[][] matriz) {
         this.matriz = matriz;
@@ -44,6 +44,14 @@ public class TreeNode<E> {
 
     public void addChildrenNode(Tree children) {
         this.children.add(children);
+    }
+
+    public int getUtilidad() {
+        return utilidad;
+    }
+
+    public void setUtilidad(int utilidad) {
+        this.utilidad = utilidad;
     }
 
     
