@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url('ec/edu/espol/images/pizarra.jpg'); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controllers.Tablero_3_en_rayaController">
    <top>
@@ -37,6 +38,14 @@
       <VBox fx:id="p2" prefHeight="226.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </right>
    <bottom>
-      <HBox prefHeight="64.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+      <StackPane prefHeight="64.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="bTerminarJ" mnemonicParsing="false" onMouseClicked="#terminarJuego" prefHeight="28.0" prefWidth="98.0" text="Terminar juego">
+               <font>
+                  <Font name="Arial" size="11.0" />
+               </font>
+            </Button>
+         </children>
+      </StackPane>
    </bottom>
 </BorderPane>

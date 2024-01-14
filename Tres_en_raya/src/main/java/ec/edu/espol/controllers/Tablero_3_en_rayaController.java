@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -69,6 +70,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private VBox p1;
     @FXML
     private VBox p2;
+    @FXML
+    private Button bTerminarJ;
 
     /**
      * Initializes the controller class.
@@ -375,9 +378,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private boolean verificarDiagonalSecundaria(){
         //verifica si las tres fichas son iguales en la diagonal
-        ImageView iv1 = imageViews[0][0];
+        ImageView iv1 = imageViews[0][2];
         ImageView iv2 = imageViews[1][1];
-        ImageView iv3 = imageViews[2][2];
+        ImageView iv3 = imageViews[2][0];
 
         Simbolo s1 = (Simbolo) iv1.getUserData();
         Simbolo s2 = (Simbolo) iv2.getUserData();
@@ -392,9 +395,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean verificarFila(){
         //verifica si las tres fichas son iguales en la columna
         for(int i = 0; i<imageViews.length;i++){
-            ImageView iv1 = imageViews[i][0];
-            ImageView iv2 = imageViews[i][1];
-            ImageView iv3 = imageViews[i][2];
+            ImageView iv1 = imageViews[0][i];
+            ImageView iv2 = imageViews[1][i];
+            ImageView iv3 = imageViews[2][i];
 
             Simbolo s1 = (Simbolo) iv1.getUserData();
             Simbolo s2 = (Simbolo) iv2.getUserData();
@@ -584,6 +587,17 @@ public class Tablero_3_en_rayaController implements Initializable {
         
 
         
+
+    @FXML
+    private void terminarJuego(MouseEvent event) throws IOException {
+        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
+    }
 
 }
     

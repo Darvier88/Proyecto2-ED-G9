@@ -20,6 +20,7 @@ ec\edu\espol\model\Resultado.class
 module-info.class
 ec\edu\espol\TDAs\CircularLinkedList$2.class
 ec\edu\espol\controllers\Tablero_3_en_rayaController$2.class
+.netbeans_automatic_build
 ec\edu\espol\TDAs\CircularLinkedList.class
 ec\edu\espol\controllers\Seleccionar_SimboloController.class
 ec\edu\espol\TDAs\Heap$1.class
