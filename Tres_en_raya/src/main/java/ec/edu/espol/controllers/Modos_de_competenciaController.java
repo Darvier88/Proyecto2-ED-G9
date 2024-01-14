@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 /**
  * FXML Controller class
@@ -57,6 +58,8 @@ public class Modos_de_competenciaController implements Initializable {
     private Label labelmodes;
     @FXML
     private CheckBox fichas;
+    @FXML
+    private ImageView returnB;
     /**
      * Initializes the controller class.
      */
@@ -103,6 +106,22 @@ public class Modos_de_competenciaController implements Initializable {
         Image img = new Image("ec/edu/espol/images/"+name);
         modes.setImage(img);
         labelmodes.setText(mapa.get(name));
+    }
+    
+     @FXML
+    private void handCambiarImgL(MouseEvent event) {
+        leftarrow.setCursor(Cursor.HAND);
+        
+    }
+
+    @FXML
+    private void handCambiarImgR(MouseEvent event) {
+        rightarrow.setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    private void handCambiarReturnB(MouseEvent event) {
+        this.returnB.setCursor(Cursor.HAND);
     }
     
     @FXML
@@ -204,6 +223,16 @@ public class Modos_de_competenciaController implements Initializable {
                 window.show(); 
             }
         }
+    }
+
+    @FXML
+    private void returnS(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_resultados.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
     }
     
     
