@@ -57,13 +57,7 @@ public class Seleccionar_SimboloController implements Initializable {
         iv2.setFitHeight(175);
         iv2.setFitWidth(175);
         iv2.setUserData("X");
-        iv2.setOnMouseClicked(event -> {
-            try {
-                fichaElegida(event);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        iv2.setOnMouseClicked(this::fichaElegida);
         sp1.getChildren().addAll(iv1,iv2);
         Image im3 = new Image("ec/edu/espol/images/papel_simbolo2.png");
         Image im4 = new Image("ec/edu/espol/images/O.png");
@@ -76,7 +70,7 @@ public class Seleccionar_SimboloController implements Initializable {
         iv4.setUserData("O");
         sp2.getChildren().addAll(iv3,iv4);
     }
-    private void fichaElegida(MouseEvent event) throws IOException{
+    private void fichaElegida(MouseEvent event){
         ImageView imageViewClickeado = (ImageView) event.getSource();
         String tipoFicha = (String) imageViewClickeado.getUserData();
         Jugador j1;
@@ -92,7 +86,13 @@ public class Seleccionar_SimboloController implements Initializable {
         j1.setCpu(cpu1);
         j2.setCpu(cpu1);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tipo_fichas.fxml"));
-        Parent fichasParent = loader.load();
+        Parent fichasParent=null;
+        try{
+            fichasParent = loader.load();
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
         Scene fichasScene = new Scene(fichasParent,680,480);
         Tipo_fichasController tipoFichasController = loader.getController();
         tipoFichasController.inicializar(j1, j2,r);

@@ -143,7 +143,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         p1.getChildren().clear();
         p2.getChildren().clear();
         TipoResul resul = r.getTipoResul();
-        int cantidad = r.getCantidad();
         if(resul.equals(TipoResul.PorVidas)){
             Label lb1 = new Label();
             lb1.setFont(new Font(24));

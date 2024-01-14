@@ -133,6 +133,8 @@ public class Modos_de_competenciaController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);
+                Seleccionar_SimboloController seleccionarController = loader.getController();
+                seleccionarController.inicializar(r, cpu1, cpu2);
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(fichasScene);
                 window.show(); 
@@ -164,6 +166,8 @@ public class Modos_de_competenciaController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);
+                Seleccionar_SimboloController seleccionarController = loader.getController();
+                seleccionarController.inicializar(r, cpu1, cpu2);
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(fichasScene);
                 window.show(); 
@@ -193,6 +197,8 @@ public class Modos_de_competenciaController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Seleccionar_Simbolo.fxml"));
                 Parent fichasParent = loader.load();
                 Scene fichasScene = new Scene(fichasParent,680,480);
+                Seleccionar_SimboloController seleccionarController = loader.getController();
+                seleccionarController.inicializar(r, cpu1, cpu2);
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(fichasScene);
                 window.show(); 
