@@ -83,7 +83,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         turno++;
         visualizarTurno(turno);
         inicializarTablero();
-        inicializarResultado();
+        inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
     }
     private void compararNum(){
         if(j1.getDado()>=j2.getDado()){
@@ -139,7 +139,11 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         }
     }
-    private void inicializarResultado(){
+    private void reiniciarTablero(int pJ1,int pJ2){
+        inicializarTablero();
+        inicializarResultado(pJ1,pJ2);
+    }
+    private void inicializarResultado(int puntJ1,int puntJ2){
         p1.getChildren().clear();
         p2.getChildren().clear();
         TipoResul resul = r.getTipoResul();
@@ -160,7 +164,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             StackPane.setAlignment(lb2, javafx.geometry.Pos.CENTER);
             p1.getChildren().add(root);
             p2.getChildren().add(root2);
-            for(int i=0; i<primero.getPuntuacion();i++){
+            for(int i=0; i<puntJ1;i++){
                 StackPane sp = new StackPane();
                 Image im = new Image("ec/edu/espol/images/corazon.png");
                 ImageView iv =new ImageView(im);
@@ -169,7 +173,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 sp.getChildren().add(iv);
                 p1.getChildren().add(sp);
             }
-            for(int i=0;i<segundo.getPuntuacion();i++){
+            for(int i=0;i<puntJ2;i++){
                 StackPane sp2=new StackPane();
                 Image im = new Image("ec/edu/espol/images/corazon.png");
                 ImageView iv2 = new ImageView(im);
@@ -205,7 +209,7 @@ public class Tablero_3_en_rayaController implements Initializable {
            Label puntuacion = new Label();
            puntuacion.setFont(new Font(36));
            puntuacion.setTextFill(Color.WHITE);
-           puntuacion.setText("0");
+           puntuacion.setText(""+puntJ1);
            StackPane root3 = new StackPane();
            root3.getChildren().add(puntuacion);
            StackPane.setAlignment(puntuacion, Pos.CENTER);
@@ -213,7 +217,7 @@ public class Tablero_3_en_rayaController implements Initializable {
            Label puntuacion2 = new Label();
            puntuacion2.setFont(new Font(36));
            puntuacion2.setTextFill(Color.WHITE);
-           puntuacion2.setText("0");
+           puntuacion2.setText(""+puntJ2);
            StackPane root4 = new StackPane();
            root4.getChildren().add(puntuacion2);
            StackPane.setAlignment(puntuacion2, Pos.CENTER);
@@ -225,7 +229,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
             case STANDBY:
-                inicializarResultado();
                 asignarJActual(turno);
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
@@ -247,12 +250,20 @@ public class Tablero_3_en_rayaController implements Initializable {
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(empate){
+                    Util.mostrarMensaje("El resultado del set es: Empate", "Empate","Empate");
                     empatePunt();
-                    Util.mostrarMensaje("Hay un empate.", "Empate");
+                    if(emp()){
+                        break;
+                    }
+                    currentPhase= GamePhase.STANDBY;
                 }
                 else if(victory){
                     modificarPuntuacion(actual,cmp);
-                     Util.mostrarMensaje("Felicidades jugador " + actual.getId() + ", has ganado la partida.", "Ganador");
+                    Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
+                    if(victoria()){
+                        break;
+                    }
+                    currentPhase= GamePhase.STANDBY;
                 }
         }
         
@@ -267,23 +278,75 @@ public class Tablero_3_en_rayaController implements Initializable {
         if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
             primero.sumarPuntuacion(1);
             segundo.sumarPuntuacion(1);
+            reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
         }
     }
+    private boolean victoria(){
+        if(r.getTipoResul().equals(TipoResul.PorVidas)){
+            if(primero.getPuntuacion()==0 || segundo.getPuntuacion()==0){
+                Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
+                return true;
+            }
+        }
+        else{
+            if(primero.getPuntuacion()==r.getCantidad()||segundo.getPuntuacion()==r.getCantidad()){
+                Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
+                String msj1="El jugador "+primero.getId()+" ha obtenido: "+primero.getPuntuacion();
+                String msj2 ="El jugador "+segundo.getId()+" ha obtenido: "+segundo.getPuntuacion();
+                Util.mostrarMensaje(msj1+"\n"+msj2,"Puntuación","Puntuación");
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean emp(){
+        if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+           if(primero.getPuntuacion()==r.getCantidad()&& segundo.getPuntuacion()==r.getCantidad()){
+               Util.mostrarMensaje("Habeis empatado","Empate","Empate");
+               return true;
+           }
+        }
+       return false;
+    }
     private void modificarPuntuacion(Jugador j,Comparator cmp){
-        if(cmp.compare(primero, j)==0){
+        if(cmp.compare(primero, j)==0 && primero.getId()==1){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
-                primero.restarPuntuacion(1);
+                segundo.restarPuntuacion(1);
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 primero.sumarPuntuacion(1);
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
             }
         }
-        else if(cmp.compare(segundo, j)==0){
+        else if(cmp.compare(primero, j)==0 && primero.getId()==2){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
                 segundo.restarPuntuacion(1);
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
+            else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+                primero.sumarPuntuacion(1);
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
+        }
+        else if(cmp.compare(segundo, j)==0 && segundo.getId()==1 ){
+            if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                primero.restarPuntuacion(1);
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 segundo.sumarPuntuacion(1);
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
+        }
+        else if(cmp.compare(segundo, j)==0 && segundo.getId()==2){
+            if(r.getTipoResul().equals(TipoResul.PorVidas)){
+                primero.restarPuntuacion(1);
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+            }
+            else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
+                segundo.sumarPuntuacion(1);
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
             }
         }
     }
@@ -440,12 +503,4 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
 
 }
-    
-    //Crear la funcion empate, la cual ocurre cuando el tablero se ha llenado sin que haya un ganador
-    //Poner tanto empate como tresEnRaya antes del switch, se pone de ejemplo la funcion jaqueMate del Ajedrez:
-    //Nop Xd, va despues del switch en la funcion PonerSimbolo, al menos a mi no me funciona bien antes, pilas (Jonathan)
-//    if(jaqueMate(imageViews,colorEnemigo)){
-//            return;
-//        }
-//        switch(currentPhase)
-
+   
