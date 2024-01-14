@@ -77,12 +77,20 @@ public class Seleccionar_SimboloController implements Initializable {
         Jugador j1;
         Jugador j2;
         if(tipoFicha.equals("X") && r.getTipoResul().equals(TipoResul.PorVidas)){
-            j1 = new Jugador(1,tipoFicha,0);
-            j2= new Jugador(2,"O",0);
+            j1 = new Jugador(1,tipoFicha,r.getCantidad());
+            j2= new Jugador(2,"O",r.getCantidad());
         }
-        else{
+        else if(tipoFicha.equals("O")&& r.getTipoResul().equals(TipoResul.PorVidas)){
             j1 = new Jugador(1,tipoFicha,r.getCantidad());
             j2= new Jugador(2,"X",r.getCantidad());
+        }
+        else if(tipoFicha.equals("X")&& r.getTipoResul().equals(TipoResul.PorVidas)){
+            j1 = new Jugador(1,tipoFicha,0);
+            j2= new Jugador(2,"X",0);
+        }
+        else{
+            j1 = new Jugador(1,tipoFicha,0);
+            j2= new Jugador(2,"O",0);
         }
         j1.setCpu(cpu1);
         j2.setCpu(cpu1);
