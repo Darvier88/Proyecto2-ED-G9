@@ -304,6 +304,14 @@ public class Tablero_3_en_rayaController implements Initializable {
                 reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
             }
         }
+        else{
+            if(verificarJ1Primero()){
+                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+            }
+            else{
+                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+            }
+        }
     }
     private boolean victoria(){
         if(r.getTipoResul().equals(TipoResul.PorVidas)){
