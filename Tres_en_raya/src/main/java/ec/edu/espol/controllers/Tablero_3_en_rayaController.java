@@ -65,6 +65,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Resultado r;
     private boolean victory;
     private boolean empate;
+    private int [][] intSimbolo = new int[3][3];
+    private int[] index;
     @FXML
     private GridPane gp;
     @FXML
@@ -90,6 +92,14 @@ public class Tablero_3_en_rayaController implements Initializable {
         visualizarTurno(turno);
         inicializarTablero();
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
+        asignarJActual(turno);
+    }
+    private void permitirPoner(){
+        
+    }
+    private void jugarCpu(Jugador actual) throws Exception{
+        this.IA(actual, intSimbolo);
+        int indS = index[0];
     }
     private void compararNum(){
         if(j1.getDado()>=j2.getDado()){
@@ -235,7 +245,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
             case STANDBY:
-                asignarJActual(turno);
+                asignarIntSimbolo(actual,iv);
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
             case PUT:
@@ -366,6 +376,17 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private Simbolo asignarSimbolo(Jugador actual) {
         return new Simbolo("ec/edu/espol/images/"+actual.getTipoSimbolo()+".png",actual);
+    }
+    private void asignarIntSimbolo(Jugador actual, ImageView iv){
+        Simbolo s =(Simbolo) iv.getUserData();
+        int row = s.getFila();
+        int col = s.getColumna();
+        if(actual.getTipoSimbolo().equals("X")){
+            intSimbolo[row][col] =1;
+        }
+        else if(actual.getTipoSimbolo().equals("O")){
+            intSimbolo[row][col]=2;
+        }
     }
     private boolean ponerFicha(ImageView iv){
         //devuelve false cuando la casilla esta ocupada
@@ -514,18 +535,17 @@ public class Tablero_3_en_rayaController implements Initializable {
         int s=j.getIntsimbolo();
         int s2=0;
         if(s==1){
-        s2=2;
+            s2=2;
         }
         else{
-        s2=1;
+            s2=1;
         }
-        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
        
             
-        Tree<int[][]> juego= new Tree(matIni);
+        Tree<int[][]> juego= new Tree(intSimbolo);
         
         
-        int[][] copia=matIni.clone();
+        int[][] copia=intSimbolo.clone();
 
         llenarTree_Nivel_1(juego, copia, s);
         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
@@ -534,12 +554,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         
         // llenar con min y max
-        int[] ind= this.llenarMinimax(juego);
+        index= this.llenarMinimax(juego);
         
         // pasos a seguir se dan en los indices
-
-
-
  
     }
     
@@ -561,7 +578,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
         }
         
-        int[] ind= this.llenarMinimax(juego);
+        index= this.llenarMinimax(juego);
     }
     
     
@@ -632,10 +649,8 @@ public class Tablero_3_en_rayaController implements Initializable {
 
     public int calcRowsU(int s, int[][] m){
         int ret=0;
-        
-        int iter=0;
         for (int i = 0; i < 3; i++) {
-            iter=0;
+            int iter=0;
             for (int j = 0; j < 3; j++) {
                 if(m[i][j]==s || m[i][j]==0 )
                     iter++;
@@ -649,10 +664,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     public int calcColsU(int s, int[][] m){
         int ret=0;
-        
-        int iter=0;
         for (int i = 0; i < 3; i++) {
-            iter=0;
+            int iter=0;
             for (int j = 0; j < 3; j++) {
                 if(m[j][i]==s || m[j][i]==0 )
                     iter++;
@@ -705,7 +718,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 }                            
                 utilidades2.add(u);
                 if(k==juego.getRootNode().getChildren().get(i).getRootNode().getChildren().size()-1){
-                    int min=0;
+                    int min=Integer.MAX_VALUE;
                     for (int l = 0; l < utilidades2.size(); l++) {
                         if(utilidades2.get(l)<min){
                             min=utilidades2.get(l);
@@ -718,7 +731,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             
             
             if(i==juego.getRootNode().getChildren().size()-1){
-                int max=0;
+                int max=Integer.MIN_VALUE;
                 for (int l = 0; l < utilidades1.size(); l++) {
                     if(utilidades1.get(l)>max){
                         max=utilidades1.get(l);
