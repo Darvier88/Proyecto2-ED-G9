@@ -56,6 +56,8 @@ public class Modos_resultadosController implements Initializable {
     private Label cantidad;
     @FXML
     private ImageView cantidadR;
+    @FXML
+    private ImageView returnB;
 
     /**
      * Initializes the controller class.
@@ -166,6 +168,21 @@ public class Modos_resultadosController implements Initializable {
     @FXML
     private void handCambiarCantR(MouseEvent event) {
         this.cantidadR.setCursor(Cursor.HAND);
+    }
+    
+    @FXML
+    private void handCambiarReturnB(MouseEvent event) {
+        this.returnB.setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    private void returnS(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
     }
     
     

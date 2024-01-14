@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -67,6 +68,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private VBox p1;
     @FXML
     private VBox p2;
+    @FXML
+    private Button bTerminarJ;
 
     /**
      * Initializes the controller class.
@@ -437,6 +440,17 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
     }
     return true;
+    }
+
+    @FXML
+    private void terminarJuego(MouseEvent event) throws IOException {
+        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
     }
 
 }
