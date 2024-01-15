@@ -14,6 +14,7 @@ import ec.edu.espol.model.TipoResul;
 import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -97,7 +98,6 @@ public class Tablero_3_en_rayaController implements Initializable {
             int[][] copia=matIni.clone();
             
             llenarTree_Nivel_1(juego, s);
-            juego.toString_();
             for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
                 int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
                 llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
@@ -569,61 +569,61 @@ public class Tablero_3_en_rayaController implements Initializable {
     return true;
     }
     
-    public void IA_inicio(Jugador j) throws Exception{
-        //x=1 o=2
-        //CPU empieza;
-        int s=j.getIntsimbolo();
-        int s2=0;
-        if(s==1){
-        s2=2;
-        }
-        else{
-        s2=1;
-        }
-        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
-       
-            
-        Tree<int[][]> juego= new Tree(matIni);
-        
-        
-        int[][] copia=matIni.clone();
-
-        llenarTree_Nivel_1(juego, s);
-        for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
-            int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-            llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-        }
-        
-        // llenar con min y max
-        int[] ind= this.llenarMinimax(juego);
-        
-        // pasos a seguir se dan en los indices
-
-
-
- 
-    }
-    
-    public void IA(Jugador j, int[][] tableroActual) throws Exception{
-        int s=j.getIntsimbolo();
-        int s2=0;
-        if(s==1){
-        s2=2;
-        }
-        else{
-        s2=1;
-        }
-        
-        int[][] copia= tableroActual.clone();
-        Tree<int[][]> juego= new Tree(tableroActual);
-        this.llenarTree_Nivel_1(juego, s);
-         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
-            int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-            llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-        }
-        
-        int[] ind= this.llenarMinimax(juego);
-    }
+//    public void IA_inicio(Jugador j) throws Exception{
+//        //x=1 o=2
+//        //CPU empieza;
+//        int s=j.getIntsimbolo();
+//        int s2=0;
+//        if(s==1){
+//        s2=2;
+//        }
+//        else{
+//        s2=1;
+//        }
+//        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+//       
+//            
+//        Tree<int[][]> juego= new Tree(matIni);
+//        
+//        
+//        int[][] copia=matIni.clone();
+//
+//        llenarTree_Nivel_1(juego, s);
+//        for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+//            int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//            llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//        }
+//        
+//        // llenar con min y max
+//        int[] ind= this.llenarMinimax(juego);
+//        
+//        // pasos a seguir se dan en los indices
+//
+//
+//
+// 
+//    }
+//    
+//    public void IA(Jugador j, int[][] tableroActual) throws Exception{
+//        int s=j.getIntsimbolo();
+//        int s2=0;
+//        if(s==1){
+//        s2=2;
+//        }
+//        else{
+//        s2=1;
+//        }
+//        
+//        int[][] copia= tableroActual.clone();
+//        Tree<int[][]> juego= new Tree(tableroActual);
+//        this.llenarTree_Nivel_1(juego, s);
+//         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+//            int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//            llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//        }
+//        
+//        int[] ind= this.llenarMinimax(juego);
+//    }
     
     
     public void llenarTree_Nivel_1(Tree juego, int s){
@@ -642,12 +642,14 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     public void llenarTree_Nivel_2(Tree t, int[][] copia, int s){
         // analiza jug 2
-        
         for (int i = 0; i < 3; i++){
             for (int k = 0; k < 3; k++) {
                 if(copia[i][k]==0){
 //                  copia[i][k]=s;
-                  int [][] ag=t.getRoot().clone();
+                int[][] ag = new int[t.getRoot().length][];
+                for (int row = 0; row < t.getRoot().length; row++) {
+                    ag[row] = Arrays.copyOf(t.getRoot()[row], t.getRoot()[row].length);
+                }
                   ag[i][k]=s;
                   Tree<int[][]> ag2= new Tree(ag);
                   int s2=0;
