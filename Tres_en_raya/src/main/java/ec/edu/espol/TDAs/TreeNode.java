@@ -22,6 +22,7 @@ public class TreeNode<E> {
     public TreeNode(Jugada[][] matriz) {
         this.matriz = matriz;
         this.children = new LinkedList<>();
+        this.utilidad=0;
     }
 
     public Jugada[][] getContent() {
@@ -44,7 +45,7 @@ public class TreeNode<E> {
         return children.get(i);
     }
 
-    public void addChildrenNode(Tree children) {
+    public void addChildrenNode(Tree<Jugada[][]> children) {
         this.children.add(children);
     }
 
@@ -55,7 +56,4 @@ public class TreeNode<E> {
     public void setUtilidad(int utilidad) {
         this.utilidad = utilidad;
     }
-
-    
-
 }

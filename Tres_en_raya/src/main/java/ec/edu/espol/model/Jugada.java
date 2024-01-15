@@ -13,13 +13,31 @@ public class Jugada {
     private int col;
     private String simbolo;
     private int id;
+    private int utilidad;
 
     public Jugada(int row, int col, String simbolo, int id) {
         this.row = row;
         this.col = col;
         this.simbolo = simbolo;
         this.id = id;
+        this.utilidad=0;
     }
+    public Jugada(int row, int col, int id) {
+        this.row = row;
+        this.col = col;
+        this.simbolo =null;
+        this.id = id;
+        this.utilidad=0;
+    }
+
+    public int getUtilidad() {
+        return utilidad;
+    }
+
+    public void setUtilidad(int utilidad) {
+        this.utilidad = utilidad;
+    }
+    
 
     public Jugada(int row, int col) {
         this.row = row;

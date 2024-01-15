@@ -58,7 +58,7 @@ public class Tree<E> {
        
     }
 
-    public void addChildren(Tree children) {
+    public void addChildren(Tree<Jugada[][]> children) {
         if (this.root != null) {
             this.root.addChildrenNode(children);
         }

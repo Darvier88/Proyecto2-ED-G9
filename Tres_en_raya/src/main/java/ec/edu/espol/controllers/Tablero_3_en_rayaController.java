@@ -16,6 +16,8 @@ import ec.edu.espol.model.TipoResul;
 import ec.edu.espol.model.Util;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -71,7 +73,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victory;
     private boolean empate;
     private int[] index;
-    private Simbolo aPoner;
+    private Jugada aHacer;
     @FXML
     private GridPane gp;
     @FXML
@@ -414,9 +416,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         boolean estado= false;
         Simbolo s = (Simbolo) iv.getUserData();
         if(s.getImagen()!=null && s.getJ()!=null){
-            System.out.println("Hola");
             Util.mostrarMensaje("Esta casilla ya está ocupada. Por favor, elige otra.", "Casilla Ocupada");
-            System.out.println("Hola2");
             estado=false;
         }
         else{
@@ -552,18 +552,21 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     public void IA(Jugador j, Jugada[][] tableroActual) throws Exception{
         String s = j.getTipoSimbolo();
-        String s2=null;
-        if(s.equals("X")){
-            s2="O";
-        }
-        else{
-            s2="O";
-        }
         Jugada[][] copia= tableroActual.clone();
         Tree<Jugada[][]> juego= new Tree(tableroActual);
+        ArrayList<Jugada[][]> nivel1= new ArrayList<>();
+        ArrayList<Jugada[][]> nivel2= new ArrayList<>();
         this.llenarTree_Nivel_1(actual,juego, copia, s);
-         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
-            llenarTree_Nivel_2(juego, s2); // por cada arbol de matriz se va llenando el nivel 2
+        this.llenarTree_Nivel_2(juego, s); // por cada arbol de matriz se va llenando el nivel 2
+        for(Tree<Jugada[][]> lv1: juego.getRootNode().getChildren()){
+            for(Tree<Jugada[][]> lv2 : lv1.getRootNode().getChildren()){
+               Jugada[][] jug = lv2.getRootNode().getContent();
+//               for(int ñ=0;ñ<jug.length;ñ++){
+//                   for(int l=0; l<jug.length;l++){
+//                       System.out.println(jug[ñ][l].getUtilidad());
+//                   }
+//               }
+            }
         }
         this.llenarMinimax(juego);
     }
@@ -582,63 +585,105 @@ public class Tablero_3_en_rayaController implements Initializable {
         else{
             id=2;
         }
+        int xAnterior = Integer.MIN_VALUE;
+        int yAnterior = Integer.MIN_VALUE;
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 if(og[i][k].getId()==0){
                   Jugada p = og[i][k];
-                  Jugada[][] cop = new Jugada[3][3]; 
-                  cop=og;
+                  Jugada[][] cop = new Jugada[3][3];
+                  for (int row = 0; row < 3; row++) {
+                      for (int col = 0; col < 3; col++) {
+                         cop[row][col] = new Jugada(og[row][col].getRow(),og[row][col].getCol());
+                     }
+                  }
                   p.setSimbolo(s);
                   p.setId(id);
                   cop[i][k]=p;
-                  juego.addChildren(new Tree(cop));
+                  if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
+                      cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior);
+                      cop[xAnterior][yAnterior].setId(0);
+                  }
+                  xAnterior=i;
+                  yAnterior=k;
+                  Tree<Jugada[][]> t = new Tree(cop);
+                  juego.addChildren(t);
                 }
-            }
-            
+            }   
         }
     }
     public void llenarTree_Nivel_2(Tree<Jugada[][]> t, String s){
         // analiza jug 2
-
-        for(Tree<Jugada[][]> lv1 :t.getRootNode().getChildren()){
-            Jugada[][] jg = lv1.getRootNode().getContent();
-            Jugada[][] og = new Jugada[3][3];
+        int id=0;
+        ArrayList<Integer> utilidades = new ArrayList<>();
+        String s2=null;
+        if(s.equals("X")){
+            id=2;
+            s2="O";
+        }
+        else if(s.equals("O")){
+            id=1;
+            s2="X";
+        }
+        for(Tree<Jugada[][]> nodo: t.getRootNode().getChildren()){
+            System.out.println("Arbol");
+            int xAnterior=Integer.MIN_VALUE;
+            int yAnterior= Integer.MIN_VALUE;
+            ArrayList<Jugada> jAnterior = new ArrayList<>();
+            Jugada[][] jg = nodo.getRootNode().getContent();
             for(int i=0;i<jg.length;i++){
-                for(int d=0;d<jg.length;d++){
-                    Jugada jOg = jg[i][d];
-                    og[i][d]= jOg;
+                for(int j=0;j<jg.length;j++){
+                    if(jg[i][j].getId()==0){
+                        Jugada p = jg[i][j];
+                        Jugada[][] cop = new Jugada[3][3];
+                        for (int row = 0; row < 3; row++) {
+                            for (int col = 0; col < 3; col++) {
+                               cop[row][col] = new Jugada(jg[row][col].getRow(),jg[row][col].getCol(),jg[row][col].getSimbolo(),jg[row][col].getId());
+                               if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
+                                   cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior,0);;
+                                   jAnterior.add(cop[xAnterior][yAnterior]);
+                               } 
+                            }
+                        }
+                        for(int k=0; k<jAnterior.size();k++){
+                            Jugada jd= jAnterior.get(k);
+                            int fila = jd.getRow();
+                            int col = jd.getCol();
+                            int id2 = jd.getId();
+                            Jugada jgd = cop[fila][col];
+                            jgd.setRow(fila);
+                            jgd.setCol(col);
+                            jgd.setId(0);
+                            jgd.setUtilidad(0);
+                            jgd.setSimbolo(null);
+                            cop[fila][col]=jgd;
+                        }
+                        xAnterior=i;
+                        yAnterior=j;
+                        p.setSimbolo(s2);
+                        p.setId(id);
+                        cop[i][j]=p;
+                        int utilidadEnemy = this.getUtility(cop, s2);
+                        int utilidadCPU = this.getUtility(cop, s);
+                        p.setUtilidad(utilidadCPU-utilidadEnemy);
+                        cop[i][j]=p;
+                        this.mostrarMatriz(cop);
+                        Tree<Jugada[][]> arb = new Tree(cop);
+                        arb.getRootNode().setUtilidad(utilidadCPU-utilidadEnemy);
+                        utilidades.add(arb.getRootNode().getUtilidad());
+                        nodo.addChildren(arb);
+                    }
                 }
             }
-            int id=0;
-            if(s.equals("X")){
-                id=1;
-            }
-            else{
-                id=2;
-            }
-            for (int i = 0; i < 3; i++){
-                for (int k = 0; k < 3; k++) {
-                    if(og[i][k].getId()==0){
-                        Jugada p = og[i][k];
-                        Jugada[][] cop = new Jugada[3][3]; 
-                        cop=og;
-                        p.setSimbolo(s);
-                        p.setId(id);
-                        cop[i][k]=p;
-                        Tree<Jugada[][]> ag2= new Tree(cop);
-                        String s2=null;
-                        if(s.equals("X")){
-                          s2="O";
-                        }
-                        else{
-                          s2="X";
-                        }
-                        ag2.getRootNode().setUtilidad(getUtility(cop, s2)-getUtility(cop, s));
-                        lv1.addChildren(ag2);
-                    } 
-                }     
-            } 
-        }    
+        }
+    } 
+    private void mostrarMatriz(Jugada[][] jg){
+        for (int i = 0; i < jg.length; i++) {
+        for (int j = 0; j < jg[i].length; j++) {
+            System.out.print(jg[i][j].getSimbolo() + " ");
+        }
+        System.out.println();
+    }
     }
 //    public void llenarTree_Nivel_N(Tree t, int[][] copia, int s){
 //        for (int i = 0; i < 3; i++){
@@ -663,8 +708,6 @@ public class Tablero_3_en_rayaController implements Initializable {
 
     public int getUtility(Jugada[][] m, String s){
         return this.calcColsU(s, m)+this.calcRowsU(s, m)+this.calcDiagsU(s, m);
-        
-    
     }
 
     public int calcRowsU(String s, Jugada[][] m){
@@ -673,9 +716,18 @@ public class Tablero_3_en_rayaController implements Initializable {
             int iter=0;
             for (int j = 0; j < 3; j++) {
                 Jugada jd = m[i][j];
-                if(jd.getSimbolo().equals(s) ||jd.getId()==0 )
-                    iter++;
+                if(jd.getSimbolo()!=null){
+                    if(jd.getSimbolo().equals(s)){
+                        iter++;
+                    }
+                }
+                else if(jd.getSimbolo() == null ){
+                    if(jd.getId()==0){
+                        iter++;
+                    }
+                }
             }
+            
             if (iter==3)
                 ret++;
             
@@ -689,8 +741,16 @@ public class Tablero_3_en_rayaController implements Initializable {
             int iter=0;
             for (int j = 0; j < 3; j++) {
                 Jugada jd = m[i][j];
-                if(jd.getSimbolo().equals(s)|| jd.getId()==0)
-                    iter++;
+                if(jd.getSimbolo()!=null){
+                    if(jd.getSimbolo().equals(s)){
+                        iter++;
+                    }
+                }
+                else if(jd.getSimbolo() == null ){
+                    if(jd.getId()==0){
+                        iter++;
+                    }
+                }
             }
             if (iter==3)
                 ret++;
@@ -704,8 +764,16 @@ public class Tablero_3_en_rayaController implements Initializable {
         int iter=0;
         for (int i = 0; i < 3; i++) {
             Jugada jd = m[i][i];
-            if(jd.getSimbolo().equals(s)||jd.getId()==0)
-                iter++; 
+            if(jd.getSimbolo()!=null){
+                if(jd.getSimbolo().equals(s)){
+                    iter++;
+                }
+            }
+            else if(jd.getSimbolo() == null ){
+                if(jd.getId()==0){
+                    iter++;
+                }
+            }
         }
         if (iter==3)
                 ret++;
@@ -714,75 +782,96 @@ public class Tablero_3_en_rayaController implements Initializable {
         iter=0;
         for (int i = 0; i < 3; i++) {
             Jugada jd = m[i][j];
-            if(jd.getSimbolo().equals(s)||jd.getId()==0)
-                iter++; 
-                j--;
+            if(jd.getSimbolo()!=null){
+                if(jd.getSimbolo().equals(s)){
+                    iter++;
+                    j--;
+                }
+            }
+            else if(jd.getSimbolo() == null ){
+                if(jd.getId()==0){
+                    iter++;
+                    j--;
+                }
+            }
         }
         if (iter==3)
                 ret++;
         return ret;
     }
-    private Comparator<Simbolo> minimo = new Comparator<Simbolo>() {
-        @Override
-        public int compare(Simbolo o1, Simbolo o2) {
-           return o1.getUtilidad()-o2.getUtilidad();
-        }
-    };
-    private Comparator<Simbolo> maximo = new Comparator<Simbolo>() {
-        @Override
-        public int compare(Simbolo o1, Simbolo o2) {
-           return o2.getUtilidad()-o1.getUtilidad();
-        }
-    };
-    private Simbolo encontrarSimbolo(Jugada[][] juego,int utilidad){
-        Simbolo s = null;
+    private Comparator<Jugada> minimo = (Jugada o1, Jugada o2) -> o1.getUtilidad()-o2.getUtilidad();
+    private Comparator<Jugada> maximo = (Jugada o1, Jugada o2) -> o2.getUtilidad()-o1.getUtilidad();
+    private Jugada encontrarJugada(Jugada[][] juego,int utilidad){
+        Jugada jg = null;
+        String sb=null;
         for(int i=0;i<juego.length;i++){
             for(int j=0; j<juego.length;j++){
                 Jugada jd = juego[i][j];
-                int row = jd.getRow();
-                int col = jd.getCol();
-                ImageView iv = imageViews[row][col];
-                s = (Simbolo) iv.getUserData();
+                int util = jd.getUtilidad();
+                if(util==utilidad){
+                    jg=jd;
+                }
             }
         }
-        return s;
+        if(jg.getSimbolo()!=null){
+            if(jg.getSimbolo().equals("X")){
+                    sb="O";
+            }
+            else{
+                sb="X";
+            }
+            jg.setSimbolo(sb);
+        }
+        for(int k=0;k<juego.length;k++){
+            for(int v=0;v<juego.length;v++){
+                Jugada jgd2 = juego[k][v];
+                if(jgd2.getSimbolo()!=null){
+                    if(jgd2.getSimbolo().equals(sb)){
+                        jgd2.setCol(v);
+                        jgd2.setRow(k);
+                        jg=jgd2;
+                    }
+                }
+            }
+        }
+        return jg;
     }
     public void llenarMinimax(Tree<Jugada[][]> juego) throws Exception{
         if(juego==null || juego.isEmpty()){
             throw new Exception();
         }
-        PriorityQueue<Simbolo> utilidades1= new PriorityQueue<>(maximo);
-        
+        ArrayList<Integer> utilidades = new ArrayList<>();
+        PriorityQueue<Jugada> utilidades1= new PriorityQueue<>(maximo);
         for(Tree<Jugada[][]> nivel1 : juego.getRootNode().getChildren()){// iterando nivel 1
-            PriorityQueue<Simbolo> utilidades2= new PriorityQueue<>(minimo);
+            PriorityQueue<Jugada> utilidades2= new PriorityQueue<>(minimo);
+            System.out.println("Arbol");
             for(Tree<Jugada[][]> nivel2 : nivel1.getRootNode().getChildren()){ //iterando nivel 2
-                int u=0;
-                Jugada[][] jd=null;
-                try {
-                    u= nivel2.getRootNode().getUtilidad();
-                    nivel2.getRootNode().setUtilidad(u);                    
-                    jd=nivel2.getRootNode().getContent();
-                } catch (NullPointerException e) {
-                    throw new Exception();
-                }
-                Simbolo sim= encontrarSimbolo(jd,u);
-                utilidades2.offer(sim);
-                Iterator<Simbolo> it = utilidades2.iterator();
-                while(it.hasNext()){
-                    utilidades1.offer(it.next());
-                }
+                 TreeNode<Jugada[][]> nodo = nivel2.getRootNode();
+                 int u = nodo.getUtilidad();
+                 Jugada[][] jd = nodo.getContent();
+                 this.mostrarMatriz(jd);
+                 System.out.println("Utilidad "+u);
+                 Jugada jg =(encontrarJugada(jd,u));
+                 utilidades2.offer(jg);
             }
+            Jugada jg2 = utilidades2.poll();
+            System.out.println("Simbolo "+jg2.getSimbolo());
+            System.out.println("Fila "+jg2.getRow());
+            System.out.println("Col "+jg2.getCol());
+            System.out.println("Utilidad minima "+jg2.getUtilidad());
+            utilidades1.offer(jg2); 
         }
-        this.aPoner= utilidades1.peek();
+        this.aHacer= utilidades1.poll();;
+        System.out.println("Utilidad Maxima minima"+this.aHacer.getUtilidad());
     }
     private void JugarCPU() throws Exception{
             
         this.IA(actual, jugadas);
         int row=0;
-        if(aPoner!=null){
-            row = aPoner.getFila();
+        if(aHacer!=null){
+            row = aHacer.getRow();
             System.out.println("Fila "+row);
-            int col = aPoner.getColumna();
+            int col = aHacer.getCol();
             System.out.println("Columna "+col);
             ImageView iv = imageViews[row][col];
             Simbolo sb = (Simbolo) iv.getUserData();
