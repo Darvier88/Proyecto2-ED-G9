@@ -80,103 +80,101 @@ public class Tablero_3_en_rayaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            int s=1;
-            int s2=0;
-            if(s==1){
-                s2=2;
-            }
-            else{
-                s2=1;
-            }
-            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
-            
-            
-            Tree<int[][]> juego= new Tree(matIni);
-            
-//            juego.toString_();
-            int[][] copia=matIni.clone();
-            
-            llenarTree_Nivel_1(juego, s);
-            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
-                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-                System.out.println("matriz: " + i);
-                juego.getRootNode().getChildren().get(i).toString_();
-                System.out.println("******************************");
-            }
-            
-//            // llenar con min y max
-//            int[] ind= this.llenarMinimax(juego);
-            
-            int[] ind= this.llenarMinimax(juego);
-            int[][] aJugar=this.getMatrizJugada(ind, juego);
-            System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-            for(int i=0; i<ind.length;i++){
-                System.out.println("indice: "+ind[i]);
-            }
-            for (int i = 0; i < aJugar.length; i++) {
-                for (int j = 0; j < aJugar.length; j++) {
-                    System.out.print(aJugar[i][j] + " || ");
-                }
-                System.out.println("------------------");
-            }
-            System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-            
-            
-            Tree<int[][]> he=juego.getRootNode().getChildren().get(ind[0]);
-            
-            he.toString_();
-            
-            Tree<int[][]>  op=he.getRootNode().getChildren().get(0); //este sera mi nuevo juego se asume el 0 como jugada del oponente
-            
-            System.out.println("AGAINNNNNNNNNNNNNNNNN");
-            
-            this.llenarTree_Nivel_2(op, op.getRoot().clone(), s); // otra vez con 1
-            System.out.println("el to stringgggggggggggggggggggggggggggggggggggggggggggggggggggggg");
-            op.toString_();
-//            for(int i=0; i<he.getRootNode().getChildren().get(0).getRootNode().getChildren().size();i++){
+//        try {
+//            int s=1;
+//            int s2=0;
+//            if(s==1){
+//                s2=2;
+//            }
+//            else{
+//                s2=1;
+//            }
+//            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+//            
+//            
+//            Tree<int[][]> juego= new Tree(matIni);
+//            
+////            juego.toString_();
+//            int[][] copia=matIni.clone();
+//            
+//            llenarTree_Nivel_1(juego, s);
+//            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
 //                System.out.println("matriz: " + i);
-//                he.getRootNode().getChildren().get(0).getRootNode().getChildren().get(i).toString_();
+//                juego.getRootNode().getChildren().get(i).toString_();
 //                System.out.println("******************************");
 //            }
-        
-            System.out.println("FINALU?????????????????//");
-            
-            for (int i = 0; i < op.getRootNode().getChildren().size(); i++) {
-                int[][] copia2= op.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-                llenarTree_Nivel_2(op.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-                System.out.println("matriz: " + i);
-                op.getRootNode().getChildren().get(i).toString_();
-                System.out.println("******************************");
-            }
-            int[] ind_= this.llenarMinimax(op);
-            System.out.println("QUE PASA?");
-            int[][] aJugar_=this.getMatrizJugada(ind, op);
-            
-            System.out.println("START-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-            for(int i=0; i<ind_.length;i++){
-                System.out.println("indice: "+ind_[i]);
-            }
-            for (int i = 0; i < aJugar_.length; i++) {
-                for (int j = 0; j < aJugar_.length; j++) {
-                    System.out.print(aJugar_[i][j] + " || ");
-                }
-                System.out.println("------------------");
-            }
-            System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-            
-            // TODO
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//            
+////            // llenar con min y max
+////            int[] ind= this.llenarMinimax(juego);
+//            
+//            int[] ind= this.llenarMinimax(juego);
+//            int[][] aJugar=this.getMatrizJugada(ind, juego);
+//            System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind.length;i++){
+//                System.out.println("indice: "+ind[i]);
+//            }
+//            for (int i = 0; i < aJugar.length; i++) {
+//                for (int j = 0; j < aJugar.length; j++) {
+//                    System.out.print(aJugar[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            
+//            
+//            Tree<int[][]> he=juego.getRootNode().getChildren().get(ind[0]);
+//            
+//            he.toString_();
+//            
+//            Tree<int[][]>  op=he.getRootNode().getChildren().get(0); //este sera mi nuevo juego se asume el 0 como jugada del oponente
+//            
+//            System.out.println("AGAINNNNNNNNNNNNNNNNN");
+//            
+//            this.llenarTree_Nivel_2(op, op.getRoot().clone(), s); // otra vez con 1
+//            System.out.println("el to stringgggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+//            op.toString_();
+////            for(int i=0; i<he.getRootNode().getChildren().get(0).getRootNode().getChildren().size();i++){
+////                System.out.println("matriz: " + i);
+////                he.getRootNode().getChildren().get(0).getRootNode().getChildren().get(i).toString_();
+////                System.out.println("******************************");
+////            }
+//        
+//            System.out.println("FINALU?????????????????//");
+//            
+//            for (int i = 0; i < op.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= op.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(op.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//                System.out.println("matriz: " + i);
+//                op.getRootNode().getChildren().get(i).toString_();
+//                System.out.println("******************************");
+//            }
+//            int[] ind_= this.llenarMinimax(op);
+//            System.out.println("QUE PASA?");
+//            int[][] aJugar_=this.getMatrizJugada(ind, op);
+//            
+//            System.out.println("START-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind_.length;i++){
+//                System.out.println("indice: "+ind_[i]);
+//            }
+//            for (int i = 0; i < aJugar_.length; i++) {
+//                for (int j = 0; j < aJugar_.length; j++) {
+//                    System.out.print(aJugar_[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            
+//            // TODO
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }    
     public void inicializar( Jugador p1,Jugador p2,Resultado r){
         this.r=r;
         j1=p1;
         j2=p2;
-        System.out.println("SIMBOLO J1: " + j1.getTipoSimbolo());
-        System.out.println("SIMBOLO J2: " + j2.getTipoSimbolo());
         this.compararNum();
         turno++;
         visualizarTurno(turno);
@@ -586,6 +584,10 @@ public class Tablero_3_en_rayaController implements Initializable {
             Simbolo s3 = (Simbolo) iv3.getUserData();
 
             if (verificarSimbolosIguales(s1, s2, s3)) {
+                
+                System.out.println("Numero de jugador: "+s1.getJ().getId());
+                System.out.println("Simbolo de jugador ganador: " + s1.getJ().getTipoSimbolo());
+                System.out.println("Entero de simbolo de jugador ganador: " + s1.getJ().getIntsimbolo());
                 return true;
             }
         }
@@ -629,6 +631,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     public void IA_inicio(Jugador j) throws Exception{
         //x=1 o=2
         //CPU empieza;
+        //faltaria tener la capacidad de obtener el simbolo en cada jugada, de cada jugador (IA y CPU)
+        //faltaria poder dibujar el tablero en base a la matriz
         int s=j.getIntsimbolo();
         int s2=0;
         if(s==1){
