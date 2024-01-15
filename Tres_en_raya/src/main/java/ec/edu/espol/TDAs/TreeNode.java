@@ -54,6 +54,15 @@ public class TreeNode<E> {
         this.utilidad = utilidad;
     }
 
-    
+    public void toString_(){
+        System.out.println("Matriz: ");
+        for (int i = 0; i < this.matriz.length; i++) {
+            for (int j = 0; j < this.matriz.length; j++) {
+                System.out.print(this.matriz[i][j] + " || ");
+            }
+            System.out.println("------------------");
+        }
+        System.out.println("Utilidad: " + this.utilidad);
+    }
 
 }

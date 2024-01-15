@@ -61,7 +61,13 @@ public class Tree<E> {
         }
     }
 
-   
+   public void toString_() {
+        this.root.toString_();
+        System.out.println("Children: ");
+        for (int i = 0; i < this.root.getChildren().size(); i++) {
+            this.root.getTreeChildern(i).toString_();
+        }
+    }
 
    
 

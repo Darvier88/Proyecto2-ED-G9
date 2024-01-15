@@ -79,12 +79,47 @@ public class Tablero_3_en_rayaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try {
+            int s=1;
+            int s2=0;
+            if(s==1){
+                s2=2;
+            }
+            else{
+                s2=1;
+            }
+            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+            
+            
+            Tree<int[][]> juego= new Tree(matIni);
+            
+//            juego.toString_();
+            int[][] copia=matIni.clone();
+            
+            llenarTree_Nivel_1(juego, s);
+            juego.toString_();
+            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+                System.out.println("matriz: " + i);
+                juego.getRootNode().getChildren().get(i).toString_();
+                System.out.println("******************************");
+            }
+            
+//            // llenar con min y max
+//            int[] ind= this.llenarMinimax(juego);
+            
+            // TODO
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }    
     public void inicializar( Jugador p1,Jugador p2,Resultado r){
         this.r=r;
         j1=p1;
         j2=p2;
+        System.out.println("SIMBOLO J1: " + j1.getTipoSimbolo());
+        System.out.println("SIMBOLO J2: " + j2.getTipoSimbolo());
         this.compararNum();
         turno++;
         visualizarTurno(turno);
@@ -553,7 +588,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         int[][] copia=matIni.clone();
 
-        llenarTree_Nivel_1(juego, copia, s);
+        llenarTree_Nivel_1(juego, s);
         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
             int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
             llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
@@ -581,7 +616,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         int[][] copia= tableroActual.clone();
         Tree<int[][]> juego= new Tree(tableroActual);
-        this.llenarTree_Nivel_1(juego, copia, s);
+        this.llenarTree_Nivel_1(juego, s);
          for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
             int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
             llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
@@ -591,8 +626,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     
     
-    public void llenarTree_Nivel_1(Tree juego, int[][] copia, int s){
-        
+    public void llenarTree_Nivel_1(Tree juego, int s){
+        int[][] copia = new int[3][3];
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 if(copia[i][k]==0){
@@ -611,7 +646,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         for (int i = 0; i < 3; i++){
             for (int k = 0; k < 3; k++) {
                 if(copia[i][k]==0){
-                  copia[i][k]=s;
+//                  copia[i][k]=s;
                   int [][] ag=t.getRoot().clone();
                   ag[i][k]=s;
                   Tree<int[][]> ag2= new Tree(ag);
@@ -622,9 +657,9 @@ public class Tablero_3_en_rayaController implements Initializable {
                   else{
                     s2=1;
                   }
-                  ag2.getRootNode().setUtilidad(getUtility(ag, s2)-getUtility(ag, s));
+//                  ag2.getRootNode().setUtilidad(getUtility(ag, s2)-getUtility(ag, s));
                   t.addChildren(ag2);
-
+                  
             } }  } 
         
     }

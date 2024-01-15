@@ -1,18 +1,11 @@
 package ec.edu.espol.tres_en_raya;
 
-import ec.edu.espol.TDAs.CircularLinkedList;
-import ec.edu.espol.model.Jugador;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
 
 /**
  * JavaFX App
@@ -37,10 +30,7 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
-    public static void main(String[] args) {
-        String[] imagesTempTrad ={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
-        CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
-        
+    public static void main(String[] args) {        
         launch();
          
     }
