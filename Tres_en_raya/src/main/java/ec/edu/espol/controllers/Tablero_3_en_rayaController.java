@@ -175,6 +175,14 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.r=r;
         j1=p1;
         j2=p2;
+        if(p1.getTipoSimbolo() == "X"){
+            j1.setIntsimbolo(1);
+            j2.setIntsimbolo(2);
+        }else{
+            j1.setIntsimbolo(2);
+            j2.setIntsimbolo(1);
+        }
+        
         this.compararNum();
         turno++;
         visualizarTurno(turno);
@@ -628,19 +636,16 @@ public class Tablero_3_en_rayaController implements Initializable {
     return true;
     }
     
+    
+    
     public void IA_inicio(Jugador j) throws Exception{
         //x=1 o=2
         //CPU empieza;
         //faltaria tener la capacidad de obtener el simbolo en cada jugada, de cada jugador (IA y CPU)
         //faltaria poder dibujar el tablero en base a la matriz
-        int s=j.getIntsimbolo();
-        int s2=0;
-        if(s==1){
-        s2=2;
-        }
-        else{
-        s2=1;
-        }
+        
+        int s=j1.getIntsimbolo();
+        int s2=j2.getIntsimbolo();
         int[][] matIni= new int[3][3]; //supongamos ta esta vacio
        
             
