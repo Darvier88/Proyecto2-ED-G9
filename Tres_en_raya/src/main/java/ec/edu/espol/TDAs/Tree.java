@@ -4,18 +4,21 @@
  */
 package ec.edu.espol.TDAs;
 
+import ec.edu.espol.model.Jugada;
+import javafx.scene.image.ImageView;
+
 /**
  *
  * @author davsu
  */
 public class Tree<E> {
-    private TreeNode root;
+    private TreeNode<E> root;
 
     public Tree() {
         this.root = null;
     }
 
-    public Tree(int[][] m1) {
+    public Tree(Jugada[][] m1) {
         TreeNode matriz = new TreeNode<>(m1);
         this.root = matriz;
     }
@@ -24,7 +27,7 @@ public class Tree<E> {
         return this.root == null;
     }
 
-    public int[][] getRoot() {
+    public Jugada[][] getRoot() {
         return root.getContent();
     }
 
@@ -32,7 +35,7 @@ public class Tree<E> {
         return this.root;
     }
 
-    public void setRoot(int[][] matriz) {
+    public void setRoot(Jugada[][] matriz) {
         if (this.root == null) {
             this.root = new TreeNode<>(matriz);
         } else {

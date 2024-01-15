@@ -9,32 +9,34 @@ package ec.edu.espol.TDAs;
  * @author davsu
  */
 
+import ec.edu.espol.model.Jugada;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.scene.image.ImageView;
 
 public class TreeNode<E> {
-    private int[][] matriz;
-    private LinkedList<Tree<E>> children;
+    private Jugada[][] matriz;
+    private LinkedList<Tree<Jugada[][]>> children;
     private int utilidad;
 
-    public TreeNode(int[][] matriz) {
+    public TreeNode(Jugada[][] matriz) {
         this.matriz = matriz;
         this.children = new LinkedList<>();
     }
 
-    public int[][] getContent() {
+    public Jugada[][] getContent() {
         return this.matriz;
     }
 
-    public void setContent(int[][] matriz) {
+    public void setContent(Jugada[][] matriz) {
         this.matriz = matriz;
     }
 
-    public LinkedList<Tree<E>> getChildren() {
+    public LinkedList<Tree<Jugada[][]>> getChildren() {
         return children;
     }
 
-    public void setChildren(LinkedList<Tree<E>> children) {
+    public void setChildren(LinkedList<Tree<Jugada[][]>> children) {
         this.children = children;
     }
 

@@ -1,9 +1,11 @@
 ec\edu\espol\model\ResultadoDado.class
 ec\edu\espol\TDAs\CircularNode.class
 ec\edu\espol\TDAs\Tree.class
+ec\edu\espol\controllers\Tablero_3_en_rayaController$4.class
 ec\edu\espol\model\Util.class
 ec\edu\espol\model\Jugador.class
 ec\edu\espol\TDAs\List.class
+ec\edu\espol\model\Jugada.class
 ec\edu\espol\model\TipoResul.class
 ec\edu\espol\TDAs\Heap.class
 ec\edu\espol\controllers\Menu_PrincipalController.class
@@ -22,6 +24,7 @@ ec\edu\espol\TDAs\CircularLinkedList$2.class
 ec\edu\espol\controllers\Tablero_3_en_rayaController$2.class
 ec\edu\espol\TDAs\CircularLinkedList.class
 ec\edu\espol\controllers\Seleccionar_SimboloController.class
+ec\edu\espol\controllers\Tablero_3_en_rayaController$3.class
 ec\edu\espol\TDAs\Heap$1.class
 ec\edu\espol\tres_en_raya\App.class
 ec\edu\espol\controllers\Modos_de_juegoController.class
