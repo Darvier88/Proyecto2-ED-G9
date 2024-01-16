@@ -24,6 +24,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -97,9 +100,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.compararNum();
         turno++;
         visualizarTurno(turno);
-        inicializarTablero();
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
-        inicializarIA();
+        
+        inicializarTablero();
     }
     private void inicializarIA(){
         this.asignarJActual(turno);
@@ -188,11 +191,17 @@ public class Tablero_3_en_rayaController implements Initializable {
                 gp.add(b, row, col);
             }
         }
-
+        this.tocaIA();
+    }
+    private void tocaIA(){
+        this.asignarJActual(turno);
+        if(actual.isCpu()){
+            this.inicializarIA();
+        }
     }
     private void reiniciarTablero(int pJ1,int pJ2){
-        inicializarTablero();
         inicializarResultado(pJ1,pJ2);
+        inicializarTablero();
     }
     private void inicializarResultado(int puntJ1,int puntJ2){
         p1.getChildren().clear();
@@ -599,22 +608,31 @@ public class Tablero_3_en_rayaController implements Initializable {
         ArrayList<Integer> rowCPU= new ArrayList<>();
         ArrayList<Integer> colCPU= new ArrayList<>();
         this.llenarTree_Nivel_1(actual,juego, copia, s,rowCPU,colCPU);
-        for(int ñ=0;ñ<rowCPU.size();ñ++){
-            System.out.println("Fila CPU2 "+rowCPU.get(ñ));
-            System.out.println("Columna CPU2 "+colCPU.get(ñ));
-        }
         this.llenarTree_Nivel_2(juego, s,rowCPU,colCPU); // por cada arbol de matriz se va llenando el nivel 2
-        for(Tree<Jugada[][]> lv1: juego.getRootNode().getChildren()){
-            for(Tree<Jugada[][]> lv2 : lv1.getRootNode().getChildren()){
-               Jugada[][] jug = lv2.getRootNode().getContent();
-//               for(int ñ=0;ñ<jug.length;ñ++){
-//                   for(int l=0; l<jug.length;l++){
-//                       System.out.println(jug[ñ][l].getUtilidad());
-//                   }
-//               }
+        if(rowCPU.size()==1&&colCPU.size()==1){
+            int id=0;
+            if(s.equals("X")){
+                id=2;
             }
+            else{
+                id=1;
+            }
+            int row = rowCPU.get(0);
+            System.out.println("Fila "+row);
+            int col = colCPU.get(0);
+            System.out.println("Columna "+col);
+            Jugada jd = jugadas[row][col];
+            System.out.println("Fila2 "+jd.getRow());
+            System.out.println("Columna2 "+jd.getCol());
+            jd.setRowCPU(row);
+            jd.setColCPU(col);
+            jd.setSimbolo(s);
+            jd.setId(id);
+            this.aHacer= jd;
         }
-        this.llenarMinimax(juego);
+        else{
+            this.llenarMinimax(juego);
+        }
     }
     public void llenarTree_Nivel_1(Jugador j,Tree<Jugada[][]> juego, Jugada[][] copia, String s,ArrayList<Integer> fCPU,ArrayList<Integer> cCPU){
         Jugada[][] og = new Jugada[3][3];
@@ -752,11 +770,19 @@ public class Tablero_3_en_rayaController implements Initializable {
     } 
     private void mostrarMatriz(Jugada[][] jg){
         for (int i = 0; i < jg.length; i++) {
-        for (int j = 0; j < jg[i].length; j++) {
-            System.out.print(jg[i][j].getUtilidad() + " ");
+            for (int j = 0; j < jg[i].length; j++) {
+                System.out.print(jg[i][j].getId() + " ");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
+    private void mostrarIV(ImageView[][]iv){
+        for (int i = 0; i < iv.length; i++) {
+            for (int j = 0; j < iv[i].length; j++) {
+                System.out.print(iv[i][j].getImage().getUrl() + " ");
+            }
+            System.out.println();
+        }
     }
 //    public void llenarTree_Nivel_N(Tree t, int[][] copia, int s){
 //        for (int i = 0; i < 3; i++){
@@ -913,6 +939,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private void JugarCPU() throws Exception{
         System.out.println("Hola3");
         this.IA(actual, jugadas);
+        System.out.println("Matriz de jugada");
         if(aHacer!=null){
             int row= aHacer.getRowCPU();
             System.out.println(row);
@@ -933,28 +960,39 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             j.setId(id);
             j.setSimbolo(actual.getTipoSimbolo());
-            sb.setImagen(act.getImagen());
-            sb.setJ(act.getJ());
-            iv.setUserData(sb);
-            iv.setImage(new Image(sb.getImagen()));
-            iv.setFitWidth(anchoIm);
-            iv.setFitHeight(altoIm);
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                pause.setOnFinished(event -> {
+                    sb.setImagen(act.getImagen());
+                    sb.setJ(act.getJ());
+                    iv.setUserData(sb);
+                    iv.setFitWidth(anchoIm);
+                    iv.setFitHeight(altoIm);
+                    iv.setImage(new Image(sb.getImagen()));
+                });
+           pause.play(); 
         }
-        victory = this.tresEnRaya();
-        empate= this.emp();
-        if(!victory&&!empate){
-            iniciarNuevoTurno();
-            visualizarTurno(turno);
-            this.desOhabilitarBotones(buttons, false);
-        }
-        else if(empate){
-            Util.mostrarMensaje("El resultado del set es: Empate", "Empate","Empate");
-            empatePunt();
-        }
-        else if(victory){
-            modificarPuntuacion(actual,cmp);
-            Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
-        }
+        PauseTransition pause2 = new PauseTransition(Duration.seconds(1));
+        pause2.setOnFinished(event->{
+            victory = this.tresEnRaya();
+            System.out.println("Victoria "+victory);
+            empate = this.empate();
+            System.out.println("Empate " + empate);
+            if (!victory && !empate) {
+                iniciarNuevoTurno();
+                visualizarTurno(turno);
+                this.desOhabilitarBotones(buttons, false);
+                this.tocaIA();
+            }
+            else if (empate) {
+                Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
+                empatePunt();
+            }
+            else if (victory) {
+                modificarPuntuacion(actual, cmp);
+                Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+            }
+        });
+        pause2.play();
     }
         
     @FXML

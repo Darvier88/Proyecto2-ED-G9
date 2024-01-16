@@ -74,6 +74,7 @@ public class Jugada {
     public Jugada(int row, int col) {
         this.row = row;
         this.col = col;
+        this.utilidad=Integer.MIN_VALUE;
     }
 
     public int getRow() {
