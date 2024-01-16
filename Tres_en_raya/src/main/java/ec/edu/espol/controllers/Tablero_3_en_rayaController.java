@@ -993,6 +993,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         });
         pause2.play();
+        System.out.println("Terminado");
     }
         
     @FXML
