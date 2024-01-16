@@ -104,6 +104,8 @@ public class Jugador {
             Jugador j = new Jugador();
             j.setId(i+1);
             j.setTipoSimbolo(pieceTypes.get(i));
+            if(j.getTipoSimbolo().equals("X")) j.setIntsimbolo(1);
+            else j.setIntsimbolo(2);
             players.add(j);
         }
         return players;
