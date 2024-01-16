@@ -57,6 +57,12 @@ public class Tablero_3_en_rayaController implements Initializable {
     private StackPane sp1;
     private int turno=0;
     private ImageView[][] imageViews = new ImageView[3][3];
+    
+    private Tree<ImageView> arbolJugadas= new Tree();
+    private Tree<int[][]> arbolmatrizJugadas= new Tree();
+    private int[][] matrizJugada= new int[3][3];
+    private int[][] jugadaRecomendada= new int[3][3];
+    
     private Button[][] buttons = new Button[3][3];
     private int currentRow, currentCol;
     private GamePhase currentPhase = STANDBY;
@@ -80,97 +86,7 @@ public class Tablero_3_en_rayaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            int s=1;
-            int s2=0;
-            if(s==1){
-                s2=2;
-            }
-            else{
-                s2=1;
-            }
-            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
-            
-            
-            Tree<int[][]> juego= new Tree(matIni);
-            
-//            juego.toString_();
-            int[][] copia=matIni.clone();
-            
-            llenarTree_Nivel_1(juego, s);
-            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
-                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-                System.out.println("matriz: " + i);
-                juego.getRootNode().getChildren().get(i).toString_();
-                System.out.println("******************************");
-            }
-            
-//            // llenar con min y max
-//            int[] ind= this.llenarMinimax(juego);
-            
-            int[] ind= this.llenarMinimax(juego);
-            int[][] aJugar=this.getMatrizJugada(ind, juego);
-            System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-            for(int i=0; i<ind.length;i++){
-                System.out.println("indice: "+ind[i]);
-            }
-            for (int i = 0; i < aJugar.length; i++) {
-                for (int j = 0; j < aJugar.length; j++) {
-                    System.out.print(aJugar[i][j] + " || ");
-                }
-                System.out.println("------------------");
-            }
-            System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-            
-            
-            Tree<int[][]> he=juego.getRootNode().getChildren().get(ind[0]);
-            
-            he.toString_();
-            
-            Tree<int[][]>  op=he.getRootNode().getChildren().get(0); //este sera mi nuevo juego se asume el 0 como jugada del oponente
-            
-            System.out.println("AGAINNNNNNNNNNNNNNNNN");
-            
-            this.llenarTree_Nivel_2(op, op.getRoot().clone(), s); // otra vez con 1
-            System.out.println("el to stringgggggggggggggggggggggggggggggggggggggggggggggggggggggg");
-            op.toString_();
-//            for(int i=0; i<he.getRootNode().getChildren().get(0).getRootNode().getChildren().size();i++){
-//                System.out.println("matriz: " + i);
-//                he.getRootNode().getChildren().get(0).getRootNode().getChildren().get(i).toString_();
-//                System.out.println("******************************");
-//            }
-        
-            System.out.println("FINALU?????????????????//");
-            
-            for (int i = 0; i < op.getRootNode().getChildren().size(); i++) {
-                int[][] copia2= op.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
-                llenarTree_Nivel_2(op.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-                System.out.println("matriz: " + i);
-                op.getRootNode().getChildren().get(i).toString_();
-                System.out.println("******************************");
-            }
-            int[] ind_= this.llenarMinimax(op);
-            System.out.println("QUE PASA?");
-            int[][] aJugar_=this.getMatrizJugada(ind, op);
-            
-            System.out.println("START-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-            for(int i=0; i<ind_.length;i++){
-                System.out.println("indice: "+ind_[i]);
-            }
-            for (int i = 0; i < aJugar_.length; i++) {
-                for (int j = 0; j < aJugar_.length; j++) {
-                    System.out.print(aJugar_[i][j] + " || ");
-                }
-                System.out.println("------------------");
-            }
-            System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-            juego.toString_();
-            
-            // TODO
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//       
     }    
     public void inicializar( Jugador p1,Jugador p2,Resultado r){
         this.r=r;
@@ -243,6 +159,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 buttons[row][col]=b;
                 b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                b.setId(row+","+col);
                 b.setOnMouseClicked(this::ponerSimbolo);
                 gp.add(b, row, col);
             }
@@ -335,7 +252,15 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void ponerSimbolo(MouseEvent event) {
         Button b = (Button) event.getSource();
+        String[] tokens=b.getId().split(",");
+        int row=Integer.parseInt(tokens[0]);
+        int col=Integer.parseInt(tokens[1]);
+        
+        
         ImageView iv = (ImageView) b.getGraphic();
+        
+        
+        
         switch(currentPhase){
             case STANDBY:
                 asignarJActual(turno);
@@ -345,6 +270,14 @@ public class Tablero_3_en_rayaController implements Initializable {
                 boolean estado = ponerFicha(iv);
                 System.out.println(estado);
                 if(estado){
+                    if(turno%2==1){
+                        if(fichaActual!=null)
+                       this.matrizJugada[col][row]=primero.getIntsimbolo();
+                        }
+                        else{
+                            if(fichaActual!=null)
+                            this.matrizJugada[col][row]=segundo.getIntsimbolo();
+                        }
                     currentPhase=GamePhase.END;
                 }
                 else{
@@ -359,24 +292,37 @@ public class Tablero_3_en_rayaController implements Initializable {
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(empate){
+                    this.matrizJugada=new int[3][3];
+
                     Util.mostrarMensaje("El resultado del set es: Empate", "Empate","Empate");
                     empatePunt();
                     if(emp()){
+                        this.matrizJugada=new int[3][3];
                         break;
                     }
                     else if(victoria()){
+                        this.matrizJugada=new int[3][3];
                         break;
                     }
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(victory){
+                    this.matrizJugada=new int[3][3];
+
                     modificarPuntuacion(actual,cmp);
                     Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
                     if(victoria()){
+                        this.matrizJugada=new int[3][3];
                         break;
                     }
                     currentPhase= GamePhase.STANDBY;
                 }
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(this.matrizJugada[i][j] +"||");
+            }
+            System.out.println("");
         }
         
     }
@@ -627,41 +573,59 @@ public class Tablero_3_en_rayaController implements Initializable {
     return true;
     }
     
-    public void IA_inicio(Jugador j) throws Exception{
+    public int[] IA(Jugador j, Tree<int[][]> juego) throws Exception{
         //x=1 o=2
-        //CPU empieza;
         int s=j.getIntsimbolo();
         int s2=0;
         if(s==1){
-        s2=2;
+            s2=2;
         }
         else{
-        s2=1;
+            s2=1;
         }
-        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
-       
-            
-        Tree<int[][]> juego= new Tree(matIni);
-        
-        
-        int[][] copia=matIni.clone();
+//        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+//
+//
+//        Tree<int[][]> juego= new Tree(matIni);
 
-        llenarTree_Nivel_1(juego, s);
+//            juego.toString_();
+//        int[][] copia=matIni.clone();
+
+        if(juego.isEmpty())llenarTree_Nivel_1(juego, s);
+        
         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
             int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
             llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+            System.out.println("matriz: " + i);
+            juego.getRootNode().getChildren().get(i).toString_();
+            System.out.println("******************************");
         }
-        
-        // llenar con min y max
-        int[] ind= this.llenarMinimax(juego);
-        int[][] aJugar=this.getMatrizJugada(ind, juego);
-        // pasos a seguir se dan en los indices
 
+//            // llenar con min y max
+//            int[] ind= this.llenarMinimax(juego);
+
+        int[] ind= this.llenarMinimax(juego);
+        int[][] aJugar=this.getMatrizJugada(ind, juego); //recomendacion de jugada
+        jugadaRecomendada=aJugar;
+        System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//        for(int i=0; i<ind.length;i++){
+//            System.out.println("indice: "+ind[i]);
+//        }
+//        for (int i = 0; i < aJugar.length; i++) {
+//            for (int j = 0; j < aJugar.length; j++) {
+//                System.out.print(aJugar[i][j] + " || ");
+//            }
+//            System.out.println("------------------");
+//        }
+        System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+
+        return ind; //la pc se coge el arbol con indice ind mostrado quien es hijo de juego.
+       
 
 
  
     }
-//    
+    
 //    public void IA(Jugador j, int[][] tableroActual) throws Exception{
 //        int s=j.getIntsimbolo();
 //        int s2=0;
@@ -686,20 +650,6 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     public void llenarTree_Nivel_1(Tree juego, int s){ // esta funcion es solo para prueba
         int[][] copia = new int[3][3];
-        for (int i = 0; i < 3; i++) {
-            for (int k = 0; k < 3; k++) {
-                if(copia[i][k]==0){
-                  copia[i][k]=s;
-                  int[][] agregar = new int[3][3];
-                  agregar[i][k]=s;
-                  juego.addChildren(new Tree(agregar));
-                }
-            }
-            
-        }
-    }
-    public void llenarTree_Nivel_1_(Tree juego,int[][] copia, int s){
-       
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 if(copia[i][k]==0){
@@ -737,26 +687,8 @@ public class Tablero_3_en_rayaController implements Initializable {
             } }  } 
         
     }
-    public void llenarTree_Nivel_N(Tree t, int[][] copia, int s){
-        for (int i = 0; i < 3; i++){
-            for (int k = 0; k < 3; k++) {
-                if(copia[i][k]==0){
-                  copia[i][k]=s;
-                  int [][] ag=t.getRoot().clone();
-                  ag[i][k]=s;
-                  Tree<int[][]> ag2= new Tree(ag);
-                  int s2=0;
-                  if(s==1){
-                    s2=2;
-                  }
-                  else{
-                    s2=1;
-                  }
-                  ag2.getRootNode().setUtilidad(getUtility(ag, s2)-getUtility(ag, s));
-                  t.addChildren(ag2);
-
-            } }  }
-    }
+    
+    
 
     public int getUtility(int[][] m, int s){
         
@@ -867,51 +799,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         return indices;
     }
-    public int[] llenarMinimax2(Tree<int[][]> juego) throws Exception{
-        int[] indices = new int[2];
-    
-    if (juego == null || juego.isEmpty()) {
-        // Manejar caso especial si juego es nulo o está vacío
-        throw new IllegalArgumentException("El árbol de juego es nulo o está vacío.");
-    }
-    
-    LinkedList<Integer> utilidades1 = new LinkedList<>();
-    LinkedList<Integer> indicesLvl2 = new LinkedList<>();
-    int min = Integer.MAX_VALUE; // Inicializar min con el valor máximo posible
-    int max = Integer.MIN_VALUE; // Inicializar max con el valor mínimo posible
-    
-    for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) { // Iterando nivel 1
-            LinkedList<Integer> utilidades2 = new LinkedList<>();
-            for (int k = 0; k < juego.getRootNode().getChildren().get(i).getRootNode().getChildren().size(); k++) { // Iterando nivel 2
-                int u = juego.getRootNode().getChildren().get(i).getRootNode().getChildren().get(k).getRootNode().getUtilidad();
-                utilidades2.addLast(u);
-            }
-            int l=0;
-            for (int j = 0; j < utilidades2.size(); j++) {
-                if (utilidades2.get(j) < min) {
-                    min = utilidades2.get(j);
-                    l=j;
-                    
-                }
-            }
-            
-            indicesLvl2.addLast(l);
-            utilidades1.addLast(min); 
-            min = Integer.MAX_VALUE; // Reiniciar min para el siguiente nivel 1
-            
-        }
-        int m=0;
-        for (int i = 0; i < utilidades1.size(); i++) {
-            if (utilidades1.get(i) > max) {
-                max = utilidades1.get(i);
-                m=i;
-            }
-        }
-        indices[0]=m;
-        indices[1]=indicesLvl2.get(m);
-        
-        return indices;
-    }
     
     public int[][] getMatrizJugada(int[] orden, Tree<int[][]> juego){
         int nivel_a=orden[0];
@@ -919,6 +806,13 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         return juego.getRootNode().getChildren().get(nivel_a).getRootNode().getChildren().get(nivel_b).getRoot();
     }
+    
+    public void ponerSimboloCPU(){
+        if(this.j2.isCpu()){
+            IA(this.matrizJugada)
+        }
+    }
+    
     
     public void transformarMatIntaMatImg(int[][] matint){
         
@@ -928,7 +822,8 @@ public class Tablero_3_en_rayaController implements Initializable {
            }
        }
     } 
-
+    
+//    public int[][] transformarMatImgaMatInt()
     @FXML
     public void terminarJuego(MouseEvent event) throws IOException {
         Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
@@ -941,12 +836,97 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     
     
-    
-    
-    
-    
-    
-    
+//     try {
+//            int s=1;
+//            int s2=0;
+//            if(s==1){
+//                s2=2;
+//            }
+//            else{
+//                s2=1;
+//            }
+//            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+//            
+//            
+//            Tree<int[][]> juego= new Tree(matIni);
+//            
+////            juego.toString_();
+//            int[][] copia=matIni.clone();
+//            
+//            llenarTree_Nivel_1(juego, s);
+//            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//                System.out.println("matriz: " + i);
+//                juego.getRootNode().getChildren().get(i).toString_();
+//                System.out.println("******************************");
+//            }
+//            
+////            // llenar con min y max
+////            int[] ind= this.llenarMinimax(juego);
+//            
+//            int[] ind= this.llenarMinimax(juego);
+//            int[][] aJugar=this.getMatrizJugada(ind, juego);
+//            System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind.length;i++){
+//                System.out.println("indice: "+ind[i]);
+//            }
+//            for (int i = 0; i < aJugar.length; i++) {
+//                for (int j = 0; j < aJugar.length; j++) {
+//                    System.out.print(aJugar[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            
+//            
+//            Tree<int[][]> he=juego.getRootNode().getChildren().get(ind[0]);
+//            
+//            he.toString_();
+//            
+//            Tree<int[][]>  op=he.getRootNode().getChildren().get(0); //este sera mi nuevo juego se asume el 0 como jugada del oponente
+//            
+//            System.out.println("AGAINNNNNNNNNNNNNNNNN");
+//            
+//            this.llenarTree_Nivel_2(op, op.getRoot().clone(), s); // otra vez con 1
+//            System.out.println("el to stringgggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+//            op.toString_();
+////            for(int i=0; i<he.getRootNode().getChildren().get(0).getRootNode().getChildren().size();i++){
+////                System.out.println("matriz: " + i);
+////                he.getRootNode().getChildren().get(0).getRootNode().getChildren().get(i).toString_();
+////                System.out.println("******************************");
+////            }
+//        
+//            System.out.println("FINALU?????????????????//");
+//            
+//            for (int i = 0; i < op.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= op.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(op.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//                System.out.println("matriz: " + i);
+//                op.getRootNode().getChildren().get(i).toString_();
+//                System.out.println("******************************");
+//            }
+//            int[] ind_= this.llenarMinimax(op);
+//            System.out.println("QUE PASA?");
+//            int[][] aJugar_=this.getMatrizJugada(ind, op);
+//            
+//            System.out.println("START-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind_.length;i++){
+//                System.out.println("indice: "+ind_[i]);
+//            }
+//            for (int i = 0; i < aJugar_.length; i++) {
+//                for (int j = 0; j < aJugar_.length; j++) {
+//                    System.out.print(aJugar_[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            juego.toString_();
+//            
+//            // TODO
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
 
 }
 
