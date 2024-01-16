@@ -165,6 +165,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 System.out.println("------------------");
             }
             System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+            juego.toString_();
             
             // TODO
         } catch (Exception ex) {
@@ -918,6 +919,15 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         return juego.getRootNode().getChildren().get(nivel_a).getRootNode().getChildren().get(nivel_b).getRoot();
     }
+    
+    public void transformarMatIntaMatImg(int[][] matint){
+        
+        for (int j = 0; j < j; j++) {
+           for (int i = 0; i < 3; i++) {
+               
+           }
+       }
+    } 
 
     @FXML
     public void terminarJuego(MouseEvent event) throws IOException {
@@ -929,6 +939,14 @@ public class Tablero_3_en_rayaController implements Initializable {
         window.setScene(Modos_de_juegoScene);
         window.show(); 
     }
+    
+    
+    
+    
+    
+    
+    
+    
 
 }
 
