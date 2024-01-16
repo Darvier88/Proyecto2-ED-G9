@@ -701,13 +701,12 @@ public class Tablero_3_en_rayaController implements Initializable {
                         for (int row = 0; row < 3; row++) {
                             for (int col = 0; col < 3; col++) {
                                cop[row][col] = new Jugada(jg[row][col].getRow(),jg[row][col].getCol(),jg[row][col].getSimbolo(),jg[row][col].getId());
-                               if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
-                                   cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior,0);;
-                                   jAnterior.add(cop[xAnterior][yAnterior]);
-                               } 
                             }
                         }
-                        this.mostrarMatriz(jg);
+                        if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
+                           cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior,0);;
+                           jAnterior.add(cop[xAnterior][yAnterior]);
+                       } 
                         for(int k=0; k<jAnterior.size();k++){
                             Jugada jd= jAnterior.get(k);
                             int fila = jd.getRow();
@@ -734,7 +733,6 @@ public class Tablero_3_en_rayaController implements Initializable {
                         arb.getRootNode().setUtilidad(utilidadCPU-utilidadEnemy);
                         utilidades.add(arb.getRootNode().getUtilidad());
                         nodo.addChildren(arb);
-                        this.mostrarMatriz(jg);
                     }
                 }
             }
@@ -743,7 +741,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private void mostrarMatriz(Jugada[][] jg){
         for (int i = 0; i < jg.length; i++) {
         for (int j = 0; j < jg[i].length; j++) {
-            System.out.print(jg[i][j].getSimbolo() + " ");
+            System.out.print(jg[i][j].getUtilidad() + " ");
         }
         System.out.println();
     }
@@ -915,6 +913,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                  utilidades2.offer(jg);
             }
             Jugada jg2 = utilidades2.poll();
+            this.mostrarMatriz(jugadas);
             utilidades1.offer(jg2); 
         }
         this.aHacer= utilidades1.poll();
@@ -948,6 +947,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             iv.setImage(new Image(sb.getImagen()));
             iv.setFitWidth(anchoIm);
             iv.setFitHeight(altoIm);
+            this.mostrarMatriz(jugadas);
         }
         victory = this.tresEnRaya();
         empate= this.emp();
