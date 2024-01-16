@@ -14,22 +14,54 @@ public class Jugada {
     private String simbolo;
     private int id;
     private int utilidad;
-
+    private int rowCPU;
+    private int colCPU;
     public Jugada(int row, int col, String simbolo, int id) {
         this.row = row;
         this.col = col;
         this.simbolo = simbolo;
         this.id = id;
-        this.utilidad=0;
+        this.utilidad=Integer.MIN_VALUE;
+        this.rowCPU=-1;
+        this.colCPU=-1;
     }
     public Jugada(int row, int col, int id) {
         this.row = row;
         this.col = col;
         this.simbolo =null;
         this.id = id;
-        this.utilidad=0;
+        this.utilidad=Integer.MIN_VALUE;
+        this.rowCPU=-1;
+        this.colCPU=-1;
     }
 
+    public Jugada(int row, int col, String simbolo, int id, int rowCPU, int colCPU) {
+        this.row = row;
+        this.col = col;
+        this.simbolo = simbolo;
+        this.id = id;
+        this.utilidad = Integer.MIN_VALUE;
+        this.rowCPU = rowCPU;
+        this.colCPU = colCPU;
+    }
+    
+
+    public int getRowCPU() {
+        return rowCPU;
+    }
+
+    public void setRowCPU(int rowCPU) {
+        this.rowCPU = rowCPU;
+    }
+
+    public int getColCPU() {
+        return colCPU;
+    }
+
+    public void setColCPU(int colCPU) {
+        this.colCPU = colCPU;
+    }
+    
     public int getUtilidad() {
         return utilidad;
     }
