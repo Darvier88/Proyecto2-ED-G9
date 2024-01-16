@@ -186,6 +186,23 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.compararNum();
         turno++;
         visualizarTurno(turno);
+//        inicializarTablero();
+        int[][] matrix = new int[3][3];
+
+        // Asignar el valor 1 a la posición (0, 2)
+        matrix[0][2] = 1;
+
+        // Asignar el valor 2 a la posición (1, 1)
+        matrix[1][1] = 2;
+        matrix[0][1] = 2;
+        ImageView[][] bMTemp = paintMatrix(matrix);
+        for(int i = 0; i<3; i++){
+            for(int k = 0; k<3; k++){
+                ImageView bTemp = bMTemp[i][k];
+                Simbolo s = (Simbolo) bTemp.getUserData();
+                System.out.println(s.getImagen());
+            }
+        }
         inicializarTablero();
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
     }
@@ -249,7 +266,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 b.setOnMouseClicked(this::ponerSimbolo);
-                gp.add(b, row, col);
+                gp.add(b, col, row);
             }
         }
     }
@@ -511,6 +528,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             estado=true;
         }
         return estado;
+        
         }
     private void iniciarNuevoTurno(){
         turno++;
@@ -636,7 +654,54 @@ public class Tablero_3_en_rayaController implements Initializable {
     return true;
     }
     
-    
+    public ImageView[][] paintMatrix(int[][] intMatrix){
+        //agarrar una matriz de numeros, 1,2, 0 y pintar
+        ImageView[][] imageViews2 = new ImageView[3][3];
+        Button[][] buttons2 = new Button[3][3];
+        for(int row=0; row<3;row++){
+            for(int col=0;col<3;col++){
+                Button b = new Button();
+                b.setPrefWidth(100);
+                b.setPrefHeight(86);
+                ImageView iv = new ImageView();
+                imageViews2[row][col] = iv;
+                iv.setUserData(new Simbolo(row,col));
+                b.setGraphic(iv);
+                b.setStyle("-fx-base: transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                if((row==0 && col==0)||(row==0 && col==1)||(row==1 && col==0)||(row==1 && col==1)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 3 3 0; -fx-border-color: transparent white white transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                else if((row==0&&col==2)||(row==1 && col==2)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 3 0 0; -fx-border-color: transparent white transparent transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                else if((row==2 && col==0)||(row==2 && col==1)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 0 3 0; -fx-border-color: transparent transparent white transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                int intSymbol = intMatrix[row][col];
+                if(intSymbol == 1){
+                    Simbolo s = (Simbolo) iv.getUserData();
+                    s.setImagen("ec/edu/espol/images/X.png");
+                    iv.setImage(new Image("ec/edu/espol/images/X.png"));
+                    iv.setFitWidth(anchoIm);
+                    iv.setFitHeight(altoIm);
+                    iv.setUserData(s);
+                    b.setGraphic(iv);
+                }
+                else if(intSymbol == 2){
+                    Simbolo s = (Simbolo) iv.getUserData();
+                        s.setImagen("ec/edu/espol/images/O.png");
+                        iv.setImage(new Image("ec/edu/espol/images/O.png"));
+                        iv.setFitWidth(anchoIm);
+                        iv.setFitHeight(altoIm);
+                        iv.setUserData(s);
+                }
+                b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
+                b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                buttons2[row][col]=b;
+            }
+        }
+        return imageViews2;
+    }
     
     public void IA_inicio(Jugador j) throws Exception{
         //x=1 o=2
