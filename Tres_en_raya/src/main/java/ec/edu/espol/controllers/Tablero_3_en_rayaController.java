@@ -99,13 +99,36 @@ public class Tablero_3_en_rayaController implements Initializable {
         visualizarTurno(turno);
         inicializarTablero();
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
-
+        inicializarIA();
+    }
+    private void inicializarIA(){
+        this.asignarJActual(turno);
+        System.out.println("Hola");
+        if(actual.isCpu()){
+            System.out.println("Hola2");
+            this.desOhabilitarBotones(buttons, true);
+            try{
+                this.JugarCPU();
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    private void desOhabilitarBotones(Button[][] b,boolean condicion){
+        for(int i=0; i<b.length;i++){
+            for(int j=0;j<b.length;j++){
+                Button but = b[i][j];
+                but.setDisable(condicion);
+            }
+        }
     }
     private void compararNum(){
         if(j1.getDado()>=j2.getDado()){
             primero=j1;
             segundo=j2;
         }
+        
         else if(j1.getDado()<j2.getDado()){
             primero=j2;
             segundo=j1;
@@ -164,13 +187,6 @@ public class Tablero_3_en_rayaController implements Initializable {
                 b.setOnMouseClicked(this::ponerSimbolo);
                 gp.add(b, row, col);
             }
-        }
-        try{
-            this.asignarJActual(turno);
-            this.JugarCPU();
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
         }
 
     }
@@ -264,6 +280,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         ImageView iv = (ImageView) b.getGraphic();
         switch(currentPhase){
             case STANDBY:
+                asignarJActual(turno);
                 fichaActual = asignarSimbolo(actual);
                 currentPhase=GamePhase.PUT;
             case PUT:
@@ -281,6 +298,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 if(!victory&&!empate){
                     this.iniciarNuevoTurno();
                     visualizarTurno(turno);
+                    this.inicializarIA();
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(empate){
@@ -422,6 +440,22 @@ public class Tablero_3_en_rayaController implements Initializable {
         else{
             s.setImagen(fichaActual.getImagen());
             s.setJ(fichaActual.getJ());
+            int row= s.getFila();
+            int col= s.getColumna();
+            String sb = actual.getTipoSimbolo();
+            int id=0;
+            Jugada jg = jugadas[row][col];
+            jg.setRow(row);
+            jg.setCol(col);
+            if(sb.equals("X")){
+                id=1;
+            }
+            else{
+                id=2;
+            }
+            jg.setId(id);
+            jg.setSimbolo(sb);
+            this.mostrarMatriz(this.jugadas);
             iv.setImage(new Image(fichaActual.getImagen()));
             iv.setFitWidth(anchoIm);
             iv.setFitHeight(altoIm);
@@ -515,7 +549,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         return false;
     }
-    
     public void inicio() {
         try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Menu_Principal.fxml"));
@@ -552,10 +585,20 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     public void IA(Jugador j, Jugada[][] tableroActual) throws Exception{
         String s = j.getTipoSimbolo();
-        Jugada[][] copia= tableroActual.clone();
-        Tree<Jugada[][]> juego= new Tree(tableroActual);
+        Jugada[][] copia = new Jugada[3][3];
+        for(int i=0;i<tableroActual.length;i++){
+            for(int k=0; k<tableroActual.length;k++){
+                copia[i][k]= new Jugada(tableroActual[i][k].getRow(),tableroActual[i][k].getCol(),tableroActual[i][k].getSimbolo(),tableroActual[i][k].getId());
+            }
+        }  
+        System.out.println("Original");
+        this.mostrarMatriz(jugadas);
+        System.out.println("Copia");
+        this.mostrarMatriz(copia);
+        Tree<Jugada[][]> juego= new Tree(copia);
         ArrayList<Jugada[][]> nivel1= new ArrayList<>();
         ArrayList<Jugada[][]> nivel2= new ArrayList<>();
+
         this.llenarTree_Nivel_1(actual,juego, copia, s);
         this.llenarTree_Nivel_2(juego, s); // por cada arbol de matriz se va llenando el nivel 2
         for(Tree<Jugada[][]> lv1: juego.getRootNode().getChildren()){
@@ -574,10 +617,11 @@ public class Tablero_3_en_rayaController implements Initializable {
         Jugada[][] og = new Jugada[3][3];
         for(int i=0;i<copia.length;i++){
             for(int d=0;d<copia.length;d++){
-                Jugada jOg = copia[i][d];
-                og[i][d]= jOg;
+                og[i][d]= new Jugada(copia[i][d].getRow(),copia[i][d].getCol(),copia[i][d].getSimbolo(),copia[i][d].getId());
             }
         }
+        System.out.println("Copia de la copia");
+        this.mostrarMatriz(og);
         int id=0;
         if(s.equals("X")){
             id=1;
@@ -587,6 +631,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         int xAnterior = Integer.MIN_VALUE;
         int yAnterior = Integer.MIN_VALUE;
+        ArrayList<Jugada> jAnterior = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 if(og[i][k].getId()==0){
@@ -594,20 +639,36 @@ public class Tablero_3_en_rayaController implements Initializable {
                   Jugada[][] cop = new Jugada[3][3];
                   for (int row = 0; row < 3; row++) {
                       for (int col = 0; col < 3; col++) {
-                         cop[row][col] = new Jugada(og[row][col].getRow(),og[row][col].getCol());
+                         cop[row][col] = new Jugada(og[row][col].getRow(),og[row][col].getCol(),og[row][col].getSimbolo(),og[row][col].getId());
                      }
                   }
+                  System.out.println("Nivel 1");
                   p.setSimbolo(s);
                   p.setId(id);
                   cop[i][k]=p;
                   if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
                       cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior);
-                      cop[xAnterior][yAnterior].setId(0);
+                      jAnterior.add(cop[xAnterior][yAnterior]);
+                      
                   }
+                  for(int ñ=0; ñ<jAnterior.size();ñ++){
+                    Jugada jd= jAnterior.get(ñ);
+                    int fila = jd.getRow();
+                    int col = jd.getCol();
+                    int id2 = jd.getId();
+                    Jugada jgd = cop[fila][col];
+                    jgd.setRow(fila);
+                    jgd.setCol(col);
+                    jgd.setId(0);
+                    jgd.setUtilidad(0);
+                    jgd.setSimbolo(null);
+                    cop[fila][col]=jgd;
+                }
                   xAnterior=i;
                   yAnterior=k;
                   Tree<Jugada[][]> t = new Tree(cop);
                   juego.addChildren(t);
+                  this.mostrarMatriz(cop);
                 }
             }   
         }
@@ -631,6 +692,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             int yAnterior= Integer.MIN_VALUE;
             ArrayList<Jugada> jAnterior = new ArrayList<>();
             Jugada[][] jg = nodo.getRootNode().getContent();
+            System.out.println("Nivel2");
             for(int i=0;i<jg.length;i++){
                 for(int j=0;j<jg.length;j++){
                     if(jg[i][j].getId()==0){
@@ -645,6 +707,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                                } 
                             }
                         }
+                        this.mostrarMatriz(jg);
                         for(int k=0; k<jAnterior.size();k++){
                             Jugada jd= jAnterior.get(k);
                             int fila = jd.getRow();
@@ -667,11 +730,11 @@ public class Tablero_3_en_rayaController implements Initializable {
                         int utilidadCPU = this.getUtility(cop, s);
                         p.setUtilidad(utilidadCPU-utilidadEnemy);
                         cop[i][j]=p;
-                        this.mostrarMatriz(cop);
                         Tree<Jugada[][]> arb = new Tree(cop);
                         arb.getRootNode().setUtilidad(utilidadCPU-utilidadEnemy);
                         utilidades.add(arb.getRootNode().getUtilidad());
                         nodo.addChildren(arb);
+                        this.mostrarMatriz(jg);
                     }
                 }
             }
@@ -840,7 +903,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         if(juego==null || juego.isEmpty()){
             throw new Exception();
         }
-        ArrayList<Integer> utilidades = new ArrayList<>();
         PriorityQueue<Jugada> utilidades1= new PriorityQueue<>(maximo);
         for(Tree<Jugada[][]> nivel1 : juego.getRootNode().getChildren()){// iterando nivel 1
             PriorityQueue<Jugada> utilidades2= new PriorityQueue<>(minimo);
@@ -849,39 +911,58 @@ public class Tablero_3_en_rayaController implements Initializable {
                  TreeNode<Jugada[][]> nodo = nivel2.getRootNode();
                  int u = nodo.getUtilidad();
                  Jugada[][] jd = nodo.getContent();
-                 this.mostrarMatriz(jd);
-                 System.out.println("Utilidad "+u);
                  Jugada jg =(encontrarJugada(jd,u));
                  utilidades2.offer(jg);
             }
             Jugada jg2 = utilidades2.poll();
-            System.out.println("Simbolo "+jg2.getSimbolo());
-            System.out.println("Fila "+jg2.getRow());
-            System.out.println("Col "+jg2.getCol());
-            System.out.println("Utilidad minima "+jg2.getUtilidad());
             utilidades1.offer(jg2); 
         }
-        this.aHacer= utilidades1.poll();;
-        System.out.println("Utilidad Maxima minima"+this.aHacer.getUtilidad());
+        this.aHacer= utilidades1.poll();
     }
     private void JugarCPU() throws Exception{
-            
+        System.out.println("Hola3");
         this.IA(actual, jugadas);
         int row=0;
         if(aHacer!=null){
             row = aHacer.getRow();
-            System.out.println("Fila "+row);
             int col = aHacer.getCol();
-            System.out.println("Columna "+col);
             ImageView iv = imageViews[row][col];
             Simbolo sb = (Simbolo) iv.getUserData();
             Simbolo act = this.asignarSimbolo(actual);
+            Jugada j = jugadas[row][col];
+            j.setRow(row);
+            j.setCol(col);
+            int id=0;
+            if(sb.equals("X")){
+                id=1;
+            }
+            else{
+                id=2;
+            }
+            j.setId(id);
+            j.setSimbolo(actual.getTipoSimbolo());
+            this.mostrarMatriz(jugadas);
             sb.setImagen(act.getImagen());
             sb.setJ(act.getJ());
             iv.setUserData(sb);
             iv.setImage(new Image(sb.getImagen()));
             iv.setFitWidth(anchoIm);
             iv.setFitHeight(altoIm);
+        }
+        victory = this.tresEnRaya();
+        empate= this.emp();
+        if(!victory&&!empate){
+            iniciarNuevoTurno();
+            visualizarTurno(turno);
+            this.desOhabilitarBotones(buttons, false);
+        }
+        else if(empate){
+            Util.mostrarMensaje("El resultado del set es: Empate", "Empate","Empate");
+            empatePunt();
+        }
+        else if(victory){
+            modificarPuntuacion(actual,cmp);
+            Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
         }
     }
         
