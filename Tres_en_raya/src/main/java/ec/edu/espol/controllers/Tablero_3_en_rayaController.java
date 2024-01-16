@@ -87,17 +87,129 @@ public class Tablero_3_en_rayaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//       
+//        try {
+//            int s=1;
+//            int s2=0;
+//            if(s==1){
+//                s2=2;
+//            }
+//            else{
+//                s2=1;
+//            }
+//            int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+//            
+//            
+//            Tree<int[][]> juego= new Tree(matIni);
+//            
+////            juego.toString_();
+//            int[][] copia=matIni.clone();
+//            
+//            llenarTree_Nivel_1(juego, s);
+//            for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//                System.out.println("matriz: " + i);
+//                juego.getRootNode().getChildren().get(i).toString_();
+//                System.out.println("******************************");
+//            }
+//            
+////            // llenar con min y max
+////            int[] ind= this.llenarMinimax(juego);
+//            
+//            int[] ind= this.llenarMinimax(juego);
+//            int[][] aJugar=this.getMatrizJugada(ind, juego);
+//            System.out.println("START TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind.length;i++){
+//                System.out.println("indice: "+ind[i]);
+//            }
+//            for (int i = 0; i < aJugar.length; i++) {
+//                for (int j = 0; j < aJugar.length; j++) {
+//                    System.out.print(aJugar[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            
+//            
+//            Tree<int[][]> he=juego.getRootNode().getChildren().get(ind[0]);
+//            
+//            he.toString_();
+//            
+//            Tree<int[][]>  op=he.getRootNode().getChildren().get(0); //este sera mi nuevo juego se asume el 0 como jugada del oponente
+//            
+//            System.out.println("AGAINNNNNNNNNNNNNNNNN");
+//            
+//            this.llenarTree_Nivel_2(op, op.getRoot().clone(), s); // otra vez con 1
+//            System.out.println("el to stringgggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+//            op.toString_();
+////            for(int i=0; i<he.getRootNode().getChildren().get(0).getRootNode().getChildren().size();i++){
+////                System.out.println("matriz: " + i);
+////                he.getRootNode().getChildren().get(0).getRootNode().getChildren().get(i).toString_();
+////                System.out.println("******************************");
+////            }
+//        
+//            System.out.println("FINALU?????????????????//");
+//            
+//            for (int i = 0; i < op.getRootNode().getChildren().size(); i++) {
+//                int[][] copia2= op.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
+//                llenarTree_Nivel_2(op.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
+//                System.out.println("matriz: " + i);
+//                op.getRootNode().getChildren().get(i).toString_();
+//                System.out.println("******************************");
+//            }
+//            int[] ind_= this.llenarMinimax(op);
+//            System.out.println("QUE PASA?");
+//            int[][] aJugar_=this.getMatrizJugada(ind, op);
+//            
+//            System.out.println("START-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            for(int i=0; i<ind_.length;i++){
+//                System.out.println("indice: "+ind_[i]);
+//            }
+//            for (int i = 0; i < aJugar_.length; i++) {
+//                for (int j = 0; j < aJugar_.length; j++) {
+//                    System.out.print(aJugar_[i][j] + " || ");
+//                }
+//                System.out.println("------------------");
+//            }
+//            System.out.println("-ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//            
+//            // TODO
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }  
     }    
     public void inicializar( Jugador p1,Jugador p2,Resultado r){
         this.r=r;
         j1=p1;
         j2=p2;
-        System.out.println("SIMBOLO J1: " + j1.getTipoSimbolo());
-        System.out.println("SIMBOLO J2: " + j2.getTipoSimbolo());
+        if(p1.getTipoSimbolo() == "X"){
+            j1.setIntsimbolo(1);
+            j2.setIntsimbolo(2);
+        }else{
+            j1.setIntsimbolo(2);
+            j2.setIntsimbolo(1);
+        }
+        
         this.compararNum();
         turno++;
         visualizarTurno(turno);
+//        inicializarTablero();
+        int[][] matrix = new int[3][3];
+
+        // Asignar el valor 1 a la posición (0, 2)
+        matrix[0][2] = 1;
+
+        // Asignar el valor 2 a la posición (1, 1)
+        matrix[1][1] = 2;
+        matrix[0][1] = 2;
+        ImageView[][] bMTemp = paintMatrix(matrix);
+        for(int i = 0; i<3; i++){
+            for(int k = 0; k<3; k++){
+                ImageView bTemp = bMTemp[i][k];
+                Simbolo s = (Simbolo) bTemp.getUserData();
+                System.out.println(s.getImagen());
+            }
+        }
         inicializarTablero();
         llenarTree_Nivel_1(arbolmatrizJugadas, primero.getIntsimbolo());
         if(this.j2.isCpu() && primero==j2){
@@ -170,7 +282,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 b.setId(row+","+col);
                 b.setOnMouseClicked(this::ponerSimbolo);
-                gp.add(b, row, col);
+                gp.add(b, col, row);
             }
         }
     }
@@ -468,6 +580,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             estado=true;
         }
         return estado;
+        
         }
     private void iniciarNuevoTurno(){
         turno++;
@@ -549,6 +662,10 @@ public class Tablero_3_en_rayaController implements Initializable {
             Simbolo s3 = (Simbolo) iv3.getUserData();
 
             if (verificarSimbolosIguales(s1, s2, s3)) {
+                
+                System.out.println("Numero de jugador: "+s1.getJ().getId());
+                System.out.println("Simbolo de jugador ganador: " + s1.getJ().getTipoSimbolo());
+                System.out.println("Entero de simbolo de jugador ganador: " + s1.getJ().getIntsimbolo());
                 return true;
             }
         }
@@ -589,6 +706,70 @@ public class Tablero_3_en_rayaController implements Initializable {
     return true;
     }
     
+    public ImageView[][] paintMatrix(int[][] intMatrix){
+        //agarrar una matriz de numeros, 1,2, 0 y pintar
+        ImageView[][] imageViews2 = new ImageView[3][3];
+        Button[][] buttons2 = new Button[3][3];
+        for(int row=0; row<3;row++){
+            for(int col=0;col<3;col++){
+                Button b = new Button();
+                b.setPrefWidth(100);
+                b.setPrefHeight(86);
+                ImageView iv = new ImageView();
+                imageViews2[row][col] = iv;
+                iv.setUserData(new Simbolo(row,col));
+                b.setGraphic(iv);
+                b.setStyle("-fx-base: transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                if((row==0 && col==0)||(row==0 && col==1)||(row==1 && col==0)||(row==1 && col==1)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 3 3 0; -fx-border-color: transparent white white transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                else if((row==0&&col==2)||(row==1 && col==2)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 3 0 0; -fx-border-color: transparent white transparent transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                else if((row==2 && col==0)||(row==2 && col==1)){
+                    b.setStyle("-fx-base: transparent;-fx-border-width: 0 0 3 0; -fx-border-color: transparent transparent white transparent;-fx-focus-color: transparent;-fx-padding: 0px;-fx-margin: 0px");
+                }
+                int intSymbol = intMatrix[row][col];
+                if(intSymbol == 1){
+                    Simbolo s = (Simbolo) iv.getUserData();
+                    s.setImagen("ec/edu/espol/images/X.png");
+                    iv.setImage(new Image("ec/edu/espol/images/X.png"));
+                    iv.setFitWidth(anchoIm);
+                    iv.setFitHeight(altoIm);
+                    iv.setUserData(s);
+                    b.setGraphic(iv);
+                }
+                else if(intSymbol == 2){
+                    Simbolo s = (Simbolo) iv.getUserData();
+                        s.setImagen("ec/edu/espol/images/O.png");
+                        iv.setImage(new Image("ec/edu/espol/images/O.png"));
+                        iv.setFitWidth(anchoIm);
+                        iv.setFitHeight(altoIm);
+                        iv.setUserData(s);
+                }
+                b.setMinSize(Button.USE_COMPUTED_SIZE, Button.USE_COMPUTED_SIZE);
+                b.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                buttons2[row][col]=b;
+            }
+        }
+        return imageViews2;
+    }
+    
+    public void IA_inicio(Jugador j) throws Exception{
+        //x=1 o=2
+        //CPU empieza;
+        //faltaria tener la capacidad de obtener el simbolo en cada jugada, de cada jugador (IA y CPU)
+        //faltaria poder dibujar el tablero en base a la matriz
+        
+        int s=j1.getIntsimbolo();
+        int s2=j2.getIntsimbolo();
+        int[][] matIni= new int[3][3]; //supongamos ta esta vacio
+       
+            
+        Tree<int[][]> juego= new Tree(matIni);
+        
+        
+        int[][] copia=matIni.clone();}
     public int[] IA(Jugador j, Tree<int[][]> juego) throws Exception{
         //x=1 o=2
         int s=j.getIntsimbolo();
@@ -821,6 +1002,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         return juego.getRootNode().getChildren().get(nivel_a).getRootNode().getChildren().get(nivel_b).getRoot();
     }
     
+
     public int[] buttonCorCPU(Tree<int[][]> jug) throws Exception{
        //diferencia entre jug y su hijo a elegir
         int[] coordenadas=new int[2];
