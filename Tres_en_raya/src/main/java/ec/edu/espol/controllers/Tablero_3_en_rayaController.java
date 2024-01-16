@@ -59,7 +59,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private ImageView[][] imageViews = new ImageView[3][3];
     
     private Tree<ImageView> arbolJugadas= new Tree();
-    private Tree<int[][]> arbolmatrizJugadas= new Tree();
+    private Tree<int[][]> arbolmatrizJugadas= new Tree(new int[3][3]);
+   
     private int[][] matrizJugada= new int[3][3];
     private int[][] jugadaRecomendada= new int[3][3];
     
@@ -98,6 +99,14 @@ public class Tablero_3_en_rayaController implements Initializable {
         turno++;
         visualizarTurno(turno);
         inicializarTablero();
+        llenarTree_Nivel_1(arbolmatrizJugadas, primero.getIntsimbolo());
+        if(this.j2.isCpu() && primero==j2){
+            try {
+                this.ponerSimboloCPU(this.buttonCorCPU(arbolmatrizJugadas));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
     }
     private void compararNum(){
@@ -251,6 +260,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
     }
     private void ponerSimbolo(MouseEvent event) {
+        
         Button b = (Button) event.getSource();
         String[] tokens=b.getId().split(",");
         int row=Integer.parseInt(tokens[0]);
@@ -258,9 +268,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         
         
         ImageView iv = (ImageView) b.getGraphic();
-        
-        
-        
         switch(currentPhase){
             case STANDBY:
                 asignarJActual(turno);
@@ -318,12 +325,21 @@ public class Tablero_3_en_rayaController implements Initializable {
                     currentPhase= GamePhase.STANDBY;
                 }
         }
+        
+        if(this.j2.isCpu()){
+            try {
+                this.ponerSimboloCPU(this.buttonCorCPU(arbolmatrizJugadas));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 System.out.print(this.matrizJugada[i][j] +"||");
             }
             System.out.println("");
         }
+
         
     }
     public Comparator<Jugador> cmp = new Comparator<>() {
@@ -590,15 +606,16 @@ public class Tablero_3_en_rayaController implements Initializable {
 
 //            juego.toString_();
 //        int[][] copia=matIni.clone();
-
-        if(juego.isEmpty())llenarTree_Nivel_1(juego, s);
+//
+//        if(this.arbolmatrizJugadas.getRootNode().getChildren()==null || this.arbolmatrizJugadas.getRootNode()==null) 
+//            llenarTree_Nivel_1(juego, s);
         
         for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) {
             int[][] copia2= juego.getRootNode().getChildren().get(i).getRoot().clone(); // suelta matriz
             llenarTree_Nivel_2(juego.getRootNode().getChildren().get(i), copia2, s2); // por cada arbol de matriz se va llenando el nivel 2
-            System.out.println("matriz: " + i);
+            //System.out.println("matriz: " + i);
             juego.getRootNode().getChildren().get(i).toString_();
-            System.out.println("******************************");
+            //System.out.println("******************************");
         }
 
 //            // llenar con min y max
@@ -618,12 +635,8 @@ public class Tablero_3_en_rayaController implements Initializable {
 //            System.out.println("------------------");
 //        }
         System.out.println("ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-
+        arbolmatrizJugadas=juego;
         return ind; //la pc se coge el arbol con indice ind mostrado quien es hijo de juego.
-       
-
-
- 
     }
     
 //    public void IA(Jugador j, int[][] tableroActual) throws Exception{
@@ -766,8 +779,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     LinkedList<Integer> indicesLvl2 = new LinkedList<>();
     int min = Integer.MAX_VALUE; // Inicializar min con el valor máximo posible
     int max = Integer.MIN_VALUE; // Inicializar max con el valor mínimo posible
-    
+    System.out.println(juego.getRootNode().getChildren().size()); System.out.println("kkkkkkkkkkkk");
     for (int i = 0; i < juego.getRootNode().getChildren().size(); i++) { // Iterando nivel 1
+        
             LinkedList<Integer> utilidades2 = new LinkedList<>();
             for (int k = 0; k < juego.getRootNode().getChildren().get(i).getRootNode().getChildren().size(); k++) { // Iterando nivel 2
                 int u = juego.getRootNode().getChildren().get(i).getRootNode().getChildren().get(k).getRootNode().getUtilidad();
@@ -807,10 +821,49 @@ public class Tablero_3_en_rayaController implements Initializable {
         return juego.getRootNode().getChildren().get(nivel_a).getRootNode().getChildren().get(nivel_b).getRoot();
     }
     
-    public void ponerSimboloCPU(){
-        if(this.j2.isCpu()){
-            IA(this.matrizJugada)
-        }
+    public int[] buttonCorCPU(Tree<int[][]> jug) throws Exception{
+       //diferencia entre jug y su hijo a elegir
+        int[] coordenadas=new int[2];
+        
+            int[] ind=IA(j2,jug);
+            
+            int numHijo=ind[0]; // el numero de arbol que es
+            
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (jug.getRoot()[i][j] !=  jug.getRootNode().getChildren().get(numHijo).getRoot()[i][j] ){
+                        coordenadas[0]=i;
+                        coordenadas[1]=j;
+                        
+                    }
+                }
+                
+            }
+            return coordenadas;
+        
+    }
+    
+    public void ponerSimboloCPU(int[] coor){
+        ImageView iv = new ImageView();
+        imageViews[coor[0]][coor[1]] = iv;
+        iv.setUserData(this.asignarSimbolo(j2));
+        this.buttons[coor[0]][coor[1]].setGraphic(iv);
+        boolean estado = ponerFicha(iv);
+               System.out.println(estado);
+               if(estado){
+                   if(turno%2==1){
+                       if(fichaActual!=null)
+                      this.matrizJugada[coor[0]][coor[1]]=primero.getIntsimbolo();
+                       }
+                       else{
+                           if(fichaActual!=null)
+                           this.matrizJugada[coor[0]][coor[1]]=segundo.getIntsimbolo();
+                       }
+                   currentPhase=GamePhase.END;
+               }
+
+               victory=tresEnRaya();
+               empate=empate();
     }
     
     
