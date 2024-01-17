@@ -245,6 +245,8 @@ public class Lanzada_dadosController implements Initializable {
         Parent tableroParent = loader.load();
         Scene tableroScene = new Scene(tableroParent,680,480);
         Tablero_3_en_rayaController tableroController = loader.getController();
+        System.out.println(p1.getTipoSimbolo());
+        System.out.println(p2.getTipoSimbolo());
         tableroController.inicializar(p1, p2,r);
         Stage window = (Stage) mensaje.getScene().getWindow();
         window.setScene(tableroScene);

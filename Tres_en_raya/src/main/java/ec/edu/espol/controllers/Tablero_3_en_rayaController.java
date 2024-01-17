@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.application.Platform;
@@ -80,6 +81,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     @FXML
     private StackPane sp1;
     private int turno=0;
+    private LinkedList<Jugada> jugadasHechas;
     private ImageView[][] imageViews = new ImageView[3][3];
     private Button[][] buttons = new Button[3][3];
     private Jugada[][] jugadas = new Jugada[3][3];
@@ -95,6 +97,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victoryJ;
     private boolean empJ;
     private int[] index;
+    private LinkedList<int[]> coordenadas = new LinkedList<>();
     private Jugada aHacer;
     @FXML
     private GridPane gp;
@@ -209,6 +212,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void inicializarTablero(){
         gp.getChildren().clear();
+        jugadasHechas = new LinkedList<>();
         for(int row=0; row<3;row++){
             for(int col=0;col<3;col++){
                 Button b = new Button();
@@ -236,7 +240,13 @@ public class Tablero_3_en_rayaController implements Initializable {
                 gp.add(b, row, col);
             }
         }
-        this.tocaIA();
+        if(this.j1.isCpu() && this.j2.isCpu()){
+            this.ayudaJ.setDisable(true);
+            this.inicializarCoordenadas();
+            this.CPUvsCPU();
+        
+        }
+        else this.tocaIA();
     }
     private void tocaIA(){
         this.asignarJActual(turno);
@@ -525,6 +535,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             jg.setId(id);
             jg.setSimbolo(sb);
+            jugadasHechas.add(jg);
             this.mostrarMatriz(this.jugadas);
             iv.setImage(new Image(fichaActual.getImagen()));
             iv.setFitWidth(anchoIm);
@@ -1024,6 +1035,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             j.setId(id);
             j.setSimbolo(actual.getTipoSimbolo());
+            jugadasHechas.add(j);
             this.mostrarMatriz(jugadas);
             PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                 pause.setOnFinished(event -> {
@@ -1078,6 +1090,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         j.setId(id);
         j.setSimbolo(actual.getTipoSimbolo());
+        jugadasHechas.add(j);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
             pause.setOnFinished(event -> {
                 sb.setImagen(act.getImagen());
@@ -1097,7 +1110,12 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.desOhabilitarBotones(buttons, false);
                 iniciarNuevoTurno();
                 visualizarTurno(turno);
-                this.tocaIA();
+                if(primero.isCpu()&&segundo.isCpu()){
+                    this.CPUvsCPU();
+                }
+                else{
+                    this.tocaIA();
+                }
             }
             else if (victory) {
                 modificarPuntuacion(actual, cmp);
@@ -1194,7 +1212,6 @@ public class Tablero_3_en_rayaController implements Initializable {
     @FXML
     private void obtenerAyuda(MouseEvent event) throws Exception {
         this.IA(actual, jugadas);
-        Jugada[][] copia = new Jugada[3][3];
 
         System.out.println("Jugadas");
         this.mostrarMatriz(jugadas);
@@ -1238,6 +1255,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
     }
     
+
     private void alertaGanadoraJ(String mensaje, String tittle){
        DialogPane dialogPane = new DialogPane();
         dialogPane.setContentText(mensaje);
@@ -1362,8 +1380,39 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         });
     }
-            
+    private void inicializarCoordenadas(){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int [] jug= {i,j};
+                coordenadas.add(jug);
+            }
+        }
+    }
+    private void CPUvsCPU() {
+        this.asignarJActual(turno);
+        int[] rd; 
+        if(!coordenadas.isEmpty()){
+            int pos=getRandomCoordenadas(coordenadas);
+            rd=coordenadas.get(pos);
+            this.ponerFicha(rd[0], rd[1]);
+            coordenadas.remove(pos);
+        } 
+    }
+      
+    private int getRandomCoordenadas(LinkedList<int[]> cor){
+        
+        if(!cor.isEmpty()){
+        int siz=cor.size();
+        
+        Random random = new Random();
 
+        // Para un número entero aleatorio
+        int randomInt = random.nextInt(siz);
+        
+        return randomInt;}
+        
+        return -1;
+    }
 }
 
    
