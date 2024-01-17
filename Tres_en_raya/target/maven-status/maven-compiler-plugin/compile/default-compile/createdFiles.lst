@@ -5,6 +5,7 @@ ec\edu\espol\TDAs\Tree.class
 ec\edu\espol\model\Util.class
 ec\edu\espol\model\Jugador.class
 ec\edu\espol\TDAs\List.class
+ec\edu\espol\controllers\Analisis_de_setController.class
 ec\edu\espol\model\Jugada.class
 ec\edu\espol\model\TipoResul.class
 ec\edu\espol\TDAs\Heap.class

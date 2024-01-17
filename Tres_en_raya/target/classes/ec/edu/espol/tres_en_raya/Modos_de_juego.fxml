@@ -24,34 +24,11 @@
    <center>
       <HBox prefHeight="296.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="293.0" prefWidth="56.0" />
-            <VBox prefHeight="296.0" prefWidth="311.0">
+            <VBox prefHeight="296.0" prefWidth="602.0">
                <children>
                   <StackPane prefHeight="127.0" prefWidth="184.0">
                      <children>
                         <ImageView fx:id="tradicional" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#elegidoT" onMouseEntered="#agrandarImg" onMouseExited="#restaurarImg" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/tradicional1.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
-                  <StackPane prefHeight="59.0" prefWidth="600.0">
-                     <children>
-                        <Label prefHeight="42.0" prefWidth="121.0" text="Tradicional">
-                           <font>
-                              <Font name="Arial" size="24.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </StackPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="296.0" prefWidth="249.0">
-               <children>
-                  <StackPane prefHeight="127.0" prefWidth="184.0">
-                     <children>
-                        <ImageView fx:id="tradicional1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#elegidoT" onMouseEntered="#agrandarImg" onMouseExited="#restaurarImg" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/tradicional1.png" />
                            </image>

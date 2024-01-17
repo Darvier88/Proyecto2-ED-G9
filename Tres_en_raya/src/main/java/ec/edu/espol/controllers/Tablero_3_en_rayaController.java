@@ -96,6 +96,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victoryJ;
     private boolean empJ;
     private int[] index;
+    private LinkedList<int[]> coordenadas = new LinkedList<>();
     private Jugada aHacer;
     @FXML
     private GridPane gp;
@@ -239,6 +240,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         }
         if(this.j1.isCpu() && this.j2.isCpu()){
+            this.inicializarCoordenadas();
             this.CPUvsCPU();
         
         }
@@ -1127,7 +1129,12 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.desOhabilitarBotones(buttons, false);
                 iniciarNuevoTurno();
                 visualizarTurno(turno);
-                this.tocaIA();
+                if(primero.isCpu()&&segundo.isCpu()){
+                    this.CPUvsCPU();
+                }
+                else{
+                    this.tocaIA();
+                }
             }
             else if (victory) {
                 modificarPuntuacion(actual, cmp);
@@ -1338,22 +1345,24 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         });
     }
-
-    private void CPUvsCPU() {
-        LinkedList<int[]> coordenadas = new LinkedList();
+    private void inicializarCoordenadas(){
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int [] jug= {i,j};
                 coordenadas.add(jug);
             }
         }
+    }
+    private void CPUvsCPU() {
+        this.asignarJActual(turno);
         int[] rd; 
-        while(true){
+        if(!coordenadas.isEmpty()){
             int pos=getRandomCoordenadas(coordenadas);
             rd=coordenadas.get(pos);
             this.ponerFicha(rd[0], rd[1]);
             coordenadas.remove(pos);
-        } }
+        } 
+    }
       
     private int getRandomCoordenadas(LinkedList<int[]> cor){
         

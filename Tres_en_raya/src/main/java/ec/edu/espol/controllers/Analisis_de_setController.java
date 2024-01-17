@@ -105,6 +105,29 @@ public class Analisis_de_setController implements Initializable {
             b.setOnMouseClicked(this::continuar);
         }
     }
+    private void reintentarJuego(MouseEvent event){
+        if(r.getTipoResul().equals(TipoResul.PorVidas)){
+            j1.setPuntuacion(r.getCantidad());
+            j2.setPuntuacion(r.getCantidad());
+        }
+        else{
+            j1.setPuntuacion(0);
+            j2.setPuntuacion(0);
+        }
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tablero_3_en_raya.fxml"));
+            Parent tableroParent = loader.load();
+            Scene tableroScene = new Scene(tableroParent,680,480);
+            Tablero_3_en_rayaController tableroController = loader.getController();
+            tableroController.inicializar(j1, j2,r);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(tableroScene);
+            window.show();   
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
     private void continuar(MouseEvent event){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Tablero_3_en_raya.fxml"));
@@ -173,7 +196,6 @@ public class Analisis_de_setController implements Initializable {
         mensaje= new Label();
         sp1.getChildren().clear();
         if(t%2==1){
-
            if(primero.isCpu() && !segundo.isCpu()){
                mensaje.setText("Turno de CPU");
            }
