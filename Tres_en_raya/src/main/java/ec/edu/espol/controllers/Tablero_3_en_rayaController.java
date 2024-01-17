@@ -1154,7 +1154,19 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button reButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeReintentar);
         reButton.addEventFilter(ActionEvent.ACTION, event -> {
             System.out.println("Se hizo clic en OK");
-               reintentarDesdeCero();
+               FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Lanzada_dados.fxml"));
+                Parent dadosParent = null;
+           try {
+               dadosParent = loader.load();
+           } catch (IOException ex) {
+               ex.printStackTrace();
+           }
+                Scene dadosScene = new Scene(dadosParent,680,480);
+                Lanzada_dadosController lanzadaDadosController = loader.getController();
+                lanzadaDadosController.inicializar(j1, j2,r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(dadosScene);
+                window.show();;
         });
 
         // Manejar la acción del botón "Cancel"
@@ -1175,22 +1187,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     
     public void reintentarDesdeCero() {
-        //por el momento funciona para j vs j
-        System.out.println("Funciona el reintentar");
-        victory = false;
-        empate = false;
-        currentPhase = STANDBY;
-        turno = 0;
-        if(primero.isCpu()&&segundo.isCpu()){
-                stopCPUVCPU = false;
-        }
-        primero.setPuntuacion(puntajeOgJ);
-        segundo.setPuntuacion(puntajeOgJ);
-        this.compararNum();
-        turno++;
-        visualizarTurno(turno);
-        inicializarResultado(this.puntajeOgJ, this.puntajeOgJ);
-        inicializarTablero();
+        
     }
     
     public void salirAlMenu(ActionEvent event) throws IOException {
