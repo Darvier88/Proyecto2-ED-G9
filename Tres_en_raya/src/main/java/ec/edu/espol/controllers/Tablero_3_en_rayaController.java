@@ -67,6 +67,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     @FXML
     private StackPane sp1;
     private int turno=0;
+    private LinkedList<Jugada> jugadasHechas;
     private ImageView[][] imageViews = new ImageView[3][3];
     private Button[][] buttons = new Button[3][3];
     private Jugada[][] jugadas = new Jugada[3][3];
@@ -194,6 +195,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void inicializarTablero(){
         gp.getChildren().clear();
+        jugadasHechas = new LinkedList<>();
         for(int row=0; row<3;row++){
             for(int col=0;col<3;col++){
                 Button b = new Button();
@@ -518,6 +520,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             jg.setId(id);
             jg.setSimbolo(sb);
+            jugadasHechas.add(jg);
             this.mostrarMatriz(this.jugadas);
             iv.setImage(new Image(fichaActual.getImagen()));
             iv.setFitWidth(anchoIm);
@@ -1016,6 +1019,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             j.setId(id);
             j.setSimbolo(actual.getTipoSimbolo());
+            jugadasHechas.add(j);
             this.mostrarMatriz(jugadas);
             PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                 pause.setOnFinished(event -> {
@@ -1072,6 +1076,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         }
         j.setId(id);
         j.setSimbolo(actual.getTipoSimbolo());
+        jugadasHechas.add(j);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
             pause.setOnFinished(event -> {
                 sb.setImagen(act.getImagen());
@@ -1123,7 +1128,6 @@ public class Tablero_3_en_rayaController implements Initializable {
     @FXML
     private void obtenerAyuda(MouseEvent event) throws Exception {
         this.IA(actual, jugadas);
-        Jugada[][] copia = new Jugada[3][3];
 
         System.out.println("Jugadas");
         this.mostrarMatriz(jugadas);
@@ -1190,8 +1194,9 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         });
     }
-            
-
+    private void analizarSet(LinkedList<Jugada[][]> jugadasHechas){
+        
+    }
 }
 
    
