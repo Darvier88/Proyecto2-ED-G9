@@ -1023,14 +1023,18 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             else if (empate) {
                 Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
+                this.victoria();
+                this.emp();
                 empatePunt();
             }
             else if (victory) {
                 modificarPuntuacion(actual, cmp);
                 Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+                this.victoria();
             }
         });
         pause2.play();
+        System.out.println("Terminado");
     }
     
     private void mostrarAlerta() {
