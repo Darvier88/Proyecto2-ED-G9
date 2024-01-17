@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -90,7 +91,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Resultado r;
     private boolean victory;
     private boolean empate;
-    private boolean victoryFinal;
+    private boolean victoryFinal = false;
     private boolean victoryJ;
     private boolean empJ;
     private int[] index;
@@ -378,33 +379,10 @@ public class Tablero_3_en_rayaController implements Initializable {
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(victory){
-                    modificarPuntuacion(actual,cmp);
-                    Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
-                    if(victoria()){
-                        break;
-                    }
-                    currentPhase= GamePhase.STANDBY;
+                    this.alertaGanadoraJ("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
                 }
                 else if(empate){
-                    Util.mostrarMensaje("El resultado del set es: Empate", "Empate","Empate");
-                    empatePunt();
-                    if(emp()){
-                        break;
-                    }
-                    else if(victoria()){
-                        break;
-                    }
-                    currentPhase= GamePhase.STANDBY;
-                }
-                else if(victory){
-                    modificarPuntuacion(actual,cmp);
-                    Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
-                    
-                    if(victoria()){
-                        
-                        break;
-                    }
-                    currentPhase= GamePhase.STANDBY;
+                    this.alertaEmpateJ("El resultado del set es: Empate", "Empate");
                 }
         }
         
@@ -437,7 +415,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private boolean victoria(){
         if(r.getTipoResul().equals(TipoResul.PorVidas)){
+            System.out.println("Prueba en victoria()");
             if(primero.getPuntuacion()==0 || segundo.getPuntuacion()==0){
+                System.out.println("Prueba en el if");
 //                Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
             victoryFinal = true;
             this.alertaFinPartida("Jugador "+actual.getId()+" has ganado el juego");
@@ -450,6 +430,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 String msj1="El jugador "+primero.getId()+" ha obtenido: "+primero.getPuntuacion();
                 String msj2 ="El jugador "+segundo.getId()+" ha obtenido: "+segundo.getPuntuacion();
 //                Util.mostrarMensaje(msj1+"\n"+msj2,"Puntuación","Puntuación");
+                victoryFinal = true;
                 this.alertaFinPartida(msj1+"\n"+msj2);
                 return true;
             }
@@ -1019,6 +1000,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.aHacer= utilidades1.poll();
     }
     private void JugarCPU() throws Exception{
+        
         System.out.println("Hola3");
         this.IA(actual, jugadas);
         System.out.println("Matriz de jugada");
@@ -1067,15 +1049,13 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.tocaIA();
             }
             else if (victory) {
-                modificarPuntuacion(actual, cmp);
-                Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
-                this.victoria();
+                this.alertaGanadoraCPU("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");                
             }
             else if (empate) {
-                Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
-                this.victoria();
-                this.emp();
-                empatePunt();
+                this.alertaEmpateCPU("El resultado del set es: Empate", "Empate");
+//                this.victoria();
+//                this.emp();
+//                empatePunt();
             }
         });
         pause2.play();
@@ -1178,12 +1158,12 @@ public class Tablero_3_en_rayaController implements Initializable {
     public void reintentarDesdeCero() {
         //por el momento funciona para j vs j
         System.out.println("Funciona el reintentar");
-        System.out.println("Punt j1: " + this.puntajeOgJ);
-        System.out.println("Punt j2: " + this.puntajeOgJ);
         victory = false;
         empate = false;
         currentPhase = STANDBY;
         turno = 0;
+        primero.setPuntuacion(puntajeOgJ);
+        segundo.setPuntuacion(puntajeOgJ);
         this.compararNum();
         turno++;
         visualizarTurno(turno);
@@ -1197,53 +1177,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         Scene Menu_PrincipalScene = new Scene(Menu_PrincipalParent,680,480);
         Stage window = (Stage) sp1.getScene().getWindow();
         window.setScene(Menu_PrincipalScene);
-        window.show(); 
-    }
-    
-    private void mostrarAlerta() {
-       DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText("Seleccione una opción");
-
-        // Agregar botones personalizados al diálogo
-        ButtonType buttonTypeOK = new ButtonType("OK", ButtonData.OK_DONE);
-        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-        dialogPane.getButtonTypes().addAll(buttonTypeOK, buttonTypeCancel);
-
-        // Crear el diálogo con el contenido personalizado
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setDialogPane(dialogPane);
-
-        // Manejar la acción del botón "OK"
-        Button okButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeOK);
-        okButton.addEventFilter(ActionEvent.ACTION, event -> {
-           try {
-               terminarJuego2(event);
-           } catch (IOException ex) {
-               ex.printStackTrace();
-           }
-            System.out.println("Se hizo clic en OK");
-            // Aquí puedes realizar acciones adicionales para el botón OK
-        });
-
-        // Manejar la acción del botón "Cancel"
-        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeCancel);
-        cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
-            System.out.println("Se hizo clic en Cancel");
-            // Aquí puedes realizar acciones adicionales para el botón Cancel
-        });
-
-        // Mostrar el diálogo sin bloquear la aplicación
-        dialog.show();
-    
-    }
-    
-    public void terminarJuego2(ActionEvent event) throws IOException {
-        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
-        Parent Modos_de_juegoParent = loader.load();
-        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
-        Stage window = (Stage) sp1.getScene().getWindow();
-        window.setScene(Modos_de_juegoScene);
         window.show(); 
     }
     
@@ -1304,6 +1237,107 @@ public class Tablero_3_en_rayaController implements Initializable {
             this.mostrarAyuda(colRecomendada, rowRecomendada, filaRecomendada, columnaRecomendada);
         }
     }
+    
+    private void alertaGanadoraJ(String mensaje, String tittle){
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText(mensaje);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
+        dialogPane.getButtonTypes().addAll(okButton);
+
+        // Configurar el botón OK
+        Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
+        ok.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+           @Override
+           public void handle(ActionEvent event) {
+               // Código a ejecutar después de cerrar la alerta
+               System.out.println("Evento OK");
+               modificarPuntuacion(actual,cmp);
+               if(victoria()){
+                   System.out.println("Victoria de la alerta");
+                   return;
+               }
+               currentPhase= GamePhase.STANDBY;
+           }
+       });
+
+        dialog.show();
+    }
+    
+    private void alertaEmpateJ(String mensaje, String tittle){
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText(mensaje);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
+        dialogPane.getButtonTypes().addAll(okButton);
+
+        // Configurar el botón OK
+        Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
+        ok.addEventFilter(ActionEvent.ACTION, event -> {
+            // Código a ejecutar después de cerrar la alerta
+            empatePunt();
+                    if(emp()){
+                        return;
+                    }
+                    else if(victoria()){
+                        return;
+                    }
+                    currentPhase= GamePhase.STANDBY;           
+        });
+
+        dialog.show();
+    }
+    
+    private void alertaEmpateCPU(String mensaje, String tittle){
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText(mensaje);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
+        dialogPane.getButtonTypes().addAll(okButton);
+
+        // Configurar el botón OK
+        Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
+        ok.addEventFilter(ActionEvent.ACTION, event -> {
+            // Código a ejecutar después de cerrar la alerta
+            this.victoria();
+            this.emp();
+            empatePunt();            
+        });
+
+        dialog.show();
+    }
+    
+    private void alertaGanadoraCPU(String mensaje, String tittle){
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText(mensaje);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
+        dialogPane.getButtonTypes().addAll(okButton);
+
+        // Configurar el botón OK
+        Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
+        ok.addEventFilter(ActionEvent.ACTION, event -> {
+            // Código a ejecutar después de cerrar la alerta
+            modificarPuntuacion(actual, cmp);
+            this.victoria();
+            
+        });
+
+        dialog.show();
+    }
+    
     private void mostrarAyuda(int col,int row, String rowRecom,String colRecom){
         Alert a = new Alert(AlertType.CONFIRMATION);
         int fila = row-1;
