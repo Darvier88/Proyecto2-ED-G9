@@ -19,6 +19,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -42,6 +44,7 @@ public class Modos_de_juegoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
     }  
     
     
@@ -92,6 +95,8 @@ public class Modos_de_juegoController implements Initializable {
         // Reproducir la animación nuevamente
         scaleTransition.play();
     }
+    
+    
 
     @FXML
     private void elegidoT(MouseEvent event) throws IOException {

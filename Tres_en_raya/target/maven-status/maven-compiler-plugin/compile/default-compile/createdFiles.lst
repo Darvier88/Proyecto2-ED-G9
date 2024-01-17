@@ -1,3 +1,4 @@
+ec\edu\espol\controllers\Lanzada_dadosController$2.class
 ec\edu\espol\model\ResultadoDado.class
 ec\edu\espol\TDAs\CircularNode.class
 ec\edu\espol\TDAs\Tree.class
@@ -10,6 +11,7 @@ ec\edu\espol\TDAs\Heap.class
 ec\edu\espol\controllers\Menu_PrincipalController.class
 ec\edu\espol\model\Dado.class
 ec\edu\espol\controllers\Tablero_3_en_rayaController.class
+ec\edu\espol\controllers\Lanzada_dadosController$1.class
 ec\edu\espol\controllers\Tablero_3_en_rayaController$1.class
 ec\edu\espol\model\Simbolo.class
 ec\edu\espol\controllers\Modos_de_competenciaController.class

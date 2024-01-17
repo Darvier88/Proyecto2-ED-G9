@@ -25,8 +25,11 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
 import javafx.application.Platform;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +39,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogEvent;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -50,6 +60,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -60,6 +71,7 @@ public class Tablero_3_en_rayaController implements Initializable {
 
     private Jugador j1;
     private Jugador j2;
+    private int puntajeOgJ;
     private Label mensaje;
     private Jugador primero;
     private Jugador segundo;
@@ -79,6 +91,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private Resultado r;
     private boolean victory;
     private boolean empate;
+    private boolean victoryFinal;
     private boolean victoryJ;
     private boolean empJ;
     private int[] index;
@@ -102,6 +115,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         // TODO
     }    
     public void inicializar( Jugador p1,Jugador p2,Resultado r){
+        this.puntajeOgJ = p1.getPuntuacion();
         this.r=r;
         j1=p1;
         j2=p2;
@@ -109,7 +123,6 @@ public class Tablero_3_en_rayaController implements Initializable {
         turno++;
         visualizarTurno(turno);
         inicializarResultado(j1.getPuntuacion(),j2.getPuntuacion());
-        
         inicializarTablero();
     }
     private void inicializarIA(){
@@ -187,8 +200,9 @@ public class Tablero_3_en_rayaController implements Initializable {
                mensaje.setText("Turno de jugador "+segundo.getId()); 
            }
         }
+        
         mensaje.setFont(new javafx.scene.text.Font("Arial", 36));
-        mensaje.setPrefWidth(325);
+        mensaje.setPrefWidth(340);
         mensaje.setPrefHeight(54);
         mensaje.setTextFill(Color.WHITE);
         sp1.getChildren().addAll(mensaje);
@@ -230,7 +244,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     }
     private void tocaIA(){
         this.asignarJActual(turno);
-        if(actual.isCpu()){
+        if(actual.isCpu() && !victoryFinal){
             this.inicializarIA();
         }
     }
@@ -387,7 +401,16 @@ public class Tablero_3_en_rayaController implements Initializable {
                     }
                     currentPhase= GamePhase.STANDBY;
                 }
-                
+                else if(victory){
+                    modificarPuntuacion(actual,cmp);
+                    Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
+                    
+                    if(victoria()){
+                        
+                        break;
+                    }
+                    currentPhase= GamePhase.STANDBY;
+                }
         }
         
     }
@@ -420,7 +443,9 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victoria(){
         if(r.getTipoResul().equals(TipoResul.PorVidas)){
             if(primero.getPuntuacion()==0 || segundo.getPuntuacion()==0){
-                Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
+//                Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
+            victoryFinal = true;
+            this.alertaFinPartida("Jugador "+actual.getId()+" has ganado el juego");
                 return true;
             }
         }
@@ -429,7 +454,8 @@ public class Tablero_3_en_rayaController implements Initializable {
                 Util.mostrarMensaje("Jugador "+actual.getId()+" has ganado el juego","Victoria","Victoria");
                 String msj1="El jugador "+primero.getId()+" ha obtenido: "+primero.getPuntuacion();
                 String msj2 ="El jugador "+segundo.getId()+" ha obtenido: "+segundo.getPuntuacion();
-                Util.mostrarMensaje(msj1+"\n"+msj2,"Puntuación","Puntuación");
+//                Util.mostrarMensaje(msj1+"\n"+msj2,"Puntuación","Puntuación");
+                this.alertaFinPartida(msj1+"\n"+msj2);
                 return true;
             }
         }
@@ -1100,8 +1126,11 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             else if (victory) {
                 modificarPuntuacion(actual, cmp);
-                Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
-                this.victoria();
+                
+                Util.mostrarMensaje2("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+                if(this.victoria()){
+                    System.out.println("Hey, gano la maquina");
+                }
             }
             else if (empate) {
                 Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
@@ -1113,7 +1142,116 @@ public class Tablero_3_en_rayaController implements Initializable {
         });
         pause2.play();
     }
-        
+    
+    private void alertaFinPartida(String mensaje) {
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText(mensaje+"\n"+"¿Desea reintentar la partidad desde el inicio o salir al menu?");
+
+        // Agregar botones personalizados al diálogo
+        ButtonType buttonTypeReintentar = new ButtonType("Reintentar", ButtonData.OK_DONE);
+        ButtonType buttonTypeSalir = new ButtonType("Salir", ButtonData.CANCEL_CLOSE);
+        dialogPane.getButtonTypes().addAll(buttonTypeReintentar, buttonTypeSalir);
+
+        // Crear el diálogo con el contenido personalizado
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        // Manejar la acción del botón "OK"
+        Button reButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeReintentar);
+        reButton.addEventFilter(ActionEvent.ACTION, event -> {
+            System.out.println("Se hizo clic en OK");
+               reintentarDesdeCero();
+        });
+
+        // Manejar la acción del botón "Cancel"
+        Button salirButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeSalir);
+        salirButton.addEventFilter(ActionEvent.ACTION, event -> {
+            System.out.println("Se hizo clic en Cancel");
+           try {
+               salirAlMenu(event);
+           } catch (IOException ex) {
+               ex.printStackTrace();
+           }
+            
+        });
+
+        // Mostrar el diálogo sin bloquear la aplicación
+        dialog.show();
+    
+    }
+    
+    public void reintentarDesdeCero() {
+        //por el momento funciona para j vs j
+        System.out.println("Funciona el reintentar");
+        System.out.println("Punt j1: " + this.puntajeOgJ);
+        System.out.println("Punt j2: " + this.puntajeOgJ);
+        victory = false;
+        empate = false;
+        currentPhase = STANDBY;
+        turno = 0;
+        this.compararNum();
+        turno++;
+        visualizarTurno(turno);
+        inicializarResultado(this.puntajeOgJ, this.puntajeOgJ);
+        inicializarTablero();
+    }
+    
+    public void salirAlMenu(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Menu_Principal.fxml"));
+        Parent Menu_PrincipalParent = loader.load();
+        Scene Menu_PrincipalScene = new Scene(Menu_PrincipalParent,680,480);
+        Stage window = (Stage) sp1.getScene().getWindow();
+        window.setScene(Menu_PrincipalScene);
+        window.show(); 
+    }
+    
+    private void mostrarAlerta() {
+       DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText("Seleccione una opción");
+
+        // Agregar botones personalizados al diálogo
+        ButtonType buttonTypeOK = new ButtonType("OK", ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+        dialogPane.getButtonTypes().addAll(buttonTypeOK, buttonTypeCancel);
+
+        // Crear el diálogo con el contenido personalizado
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+
+        // Manejar la acción del botón "OK"
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeOK);
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+           try {
+               terminarJuego2(event);
+           } catch (IOException ex) {
+               ex.printStackTrace();
+           }
+            System.out.println("Se hizo clic en OK");
+            // Aquí puedes realizar acciones adicionales para el botón OK
+        });
+
+        // Manejar la acción del botón "Cancel"
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeCancel);
+        cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
+            System.out.println("Se hizo clic en Cancel");
+            // Aquí puedes realizar acciones adicionales para el botón Cancel
+        });
+
+        // Mostrar el diálogo sin bloquear la aplicación
+        dialog.show();
+    
+    }
+    
+    public void terminarJuego2(ActionEvent event) throws IOException {
+        Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Modos_de_juego.fxml"));
+        Parent Modos_de_juegoParent = loader.load();
+        Scene Modos_de_juegoScene = new Scene(Modos_de_juegoParent,680,480);
+        Stage window = (Stage) sp1.getScene().getWindow();
+        window.setScene(Modos_de_juegoScene);
+        window.show(); 
+    }
+    
     @FXML
     public void terminarJuego(MouseEvent event) throws IOException {
         Util.mostrarMensaje("Ha terminado el juego", "Juego terminado");
