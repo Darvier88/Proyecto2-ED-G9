@@ -96,10 +96,12 @@ public class Analisis_de_setController implements Initializable {
         this.terminar= this.verificarPunt();
         if(terminar){
             Button b = new Button("Reintentar");
+            sp2.getChildren().add(b);
             b.setOnMouseClicked(this::reintentarJuego);
         }
         else{
             Button b = new Button("Al siguiente set");
+            sp2.getChildren().add(b);
             b.setOnMouseClicked(this::continuar);
         }
     }
