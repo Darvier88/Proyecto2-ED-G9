@@ -268,9 +268,6 @@ public class Analisis_de_setController implements Initializable {
             this.recom.setText("");
             this.filaRecom.setText("");
             this.colRecom.setText("");
-            turno++;
-            this.visualizarTurno(turno);
-            this.asignarJActual(turno);
         }
         else{
             this.IA(actual, copia);
@@ -280,9 +277,6 @@ public class Analisis_de_setController implements Initializable {
                 this.recom.setText("Se realizó una jugada recomendada");
                 this.filaRecom.setText("");
                 this.colRecom.setText("");
-                turno++;
-                this.visualizarTurno(turno);
-                this.asignarJActual(turno);
             }
             else{
                 rowRecom++;
@@ -319,9 +313,6 @@ public class Analisis_de_setController implements Initializable {
                 String f2 = this.colRecom.getText();
                 this.filaRecom.setText(f+" "+columnaRecomendada);
                 this.colRecom.setText(f+" "+filaRecomendada);
-                turno++;
-                this.visualizarTurno(turno);
-                this.asignarJActual(turno);
             }
         }
     }
