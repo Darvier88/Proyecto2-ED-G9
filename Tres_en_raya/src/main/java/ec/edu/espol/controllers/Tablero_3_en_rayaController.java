@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.animation.PauseTransition;
@@ -221,7 +222,11 @@ public class Tablero_3_en_rayaController implements Initializable {
                 gp.add(b, row, col);
             }
         }
-        this.tocaIA();
+        if(this.j1.isCpu() && this.j2.isCpu()){
+            this.CPUvsCPU();
+        
+        }
+        else this.tocaIA();
     }
     private void tocaIA(){
         this.asignarJActual(turno);
@@ -1166,6 +1171,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             this.mostrarAyuda(colRecomendada, rowRecomendada, filaRecomendada, columnaRecomendada);
         }
     }
+    
     private void mostrarAyuda(int col,int row, String rowRecom,String colRecom){
         Alert a = new Alert(AlertType.CONFIRMATION);
         int fila = row-1;
@@ -1190,8 +1196,37 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         });
     }
-            
 
+    private void CPUvsCPU() {
+        LinkedList<int[]> coordenadas = new LinkedList();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int [] jug= {i,j};
+                coordenadas.add(jug);
+            }
+        }
+        int[] rd; 
+        while(true){
+            int pos=getRandomCoordenadas(coordenadas);
+            rd=coordenadas.get(pos);
+            this.ponerFicha(rd[0], rd[1]);
+            coordenadas.remove(pos);
+        } }
+      
+    private int getRandomCoordenadas(LinkedList<int[]> cor){
+        
+        if(!cor.isEmpty()){
+        int siz=cor.size();
+        
+        Random random = new Random();
+
+        // Para un número entero aleatorio
+        int randomInt = random.nextInt(siz);
+        
+        return randomInt;}
+        
+        return -1;
+    }
 }
 
    
