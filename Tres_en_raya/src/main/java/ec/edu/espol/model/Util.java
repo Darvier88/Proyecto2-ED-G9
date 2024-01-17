@@ -25,7 +25,7 @@ public class Util {
         alerta.setTitle(title);
         alerta.setHeaderText(header);
         alerta.setContentText(mensaje);
-        alerta.showAndWait();
+        alerta.show();
     }
     
     

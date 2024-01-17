@@ -35,6 +35,8 @@ public class Modos_de_juegoController implements Initializable {
     private String[] imagesTempTrad ={"tradicional1.png","tradicional2.png","tradicional3.png","tradicional4.png","tradicional5.png","tradicional6.png"};
     private CircularLinkedList<String> imagenesTrad = new CircularLinkedList<>(imagesTempTrad);
     private ScaleTransition scaleTransition;
+    @FXML
+    private ImageView tradicional1;
     /**
      * Initializes the controller class.
      */
