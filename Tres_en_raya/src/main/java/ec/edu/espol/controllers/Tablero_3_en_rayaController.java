@@ -96,6 +96,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victoryFinal = false;
     private boolean victoryJ;
     private boolean empJ;
+    private boolean stopCPUVCPU;
     private int[] index;
     private LinkedList<int[]> coordenadas = new LinkedList<>();
     private Jugada aHacer;
@@ -1110,7 +1111,8 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.desOhabilitarBotones(buttons, false);
                 iniciarNuevoTurno();
                 visualizarTurno(turno);
-                if(primero.isCpu()&&segundo.isCpu()){
+                if(primero.isCpu()&&segundo.isCpu()&&!stopCPUVCPU){
+                    System.out.println("Ejecutandose el if externo cpu");
                     this.CPUvsCPU();
                 }
                 else{
@@ -1118,18 +1120,16 @@ public class Tablero_3_en_rayaController implements Initializable {
                 }
             }
             else if (victory) {
-                modificarPuntuacion(actual, cmp);
                 
-                Util.mostrarMensaje2("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
-                if(this.victoria()){
-                    System.out.println("Hey, gano la maquina");
-                }
+                this.alertaGanadoraCPU("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+                
             }
             else if (empate) {
-                Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
-                this.victoria();
-                this.emp();
-                empatePunt();
+                this.alertaEmpateCPU("El resultado del set es: Empate", "Empate");
+//                
+//                this.victoria();
+//                this.emp();
+//                empatePunt();
             }
             
         });
@@ -1138,6 +1138,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private void alertaFinPartida(String mensaje) {
        DialogPane dialogPane = new DialogPane();
+       dialogPane.setHeaderText("Victoria");
         dialogPane.setContentText(mensaje+"\n"+"¿Desea reintentar la partidad desde el inicio o salir al menu?");
 
         // Agregar botones personalizados al diálogo
@@ -1180,6 +1181,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         empate = false;
         currentPhase = STANDBY;
         turno = 0;
+        if(primero.isCpu()&&segundo.isCpu()){
+                stopCPUVCPU = false;
+        }
         primero.setPuntuacion(puntajeOgJ);
         segundo.setPuntuacion(puntajeOgJ);
         this.compararNum();
@@ -1326,9 +1330,12 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
             // Código a ejecutar después de cerrar la alerta
-            this.victoria();
+            if(primero.isCpu()&&segundo.isCpu()){
+                stopCPUVCPU = true;
+            }
             this.emp();
-            empatePunt();            
+            empatePunt();
+            this.victoria();            
         });
 
         dialog.show();
@@ -1348,6 +1355,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
             // Código a ejecutar después de cerrar la alerta
+            if(primero.isCpu()&&segundo.isCpu()){
+                stopCPUVCPU = true;
+            }
             modificarPuntuacion(actual, cmp);
             this.victoria();
             
@@ -1392,6 +1402,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.asignarJActual(turno);
         int[] rd; 
         if(!coordenadas.isEmpty()){
+            System.out.println("Ejecutandose el cpu");
             int pos=getRandomCoordenadas(coordenadas);
             rd=coordenadas.get(pos);
             this.ponerFicha(rd[0], rd[1]);
