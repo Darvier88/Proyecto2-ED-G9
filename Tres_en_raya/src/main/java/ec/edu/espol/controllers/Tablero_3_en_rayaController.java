@@ -240,6 +240,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
         }
         if(this.j1.isCpu() && this.j2.isCpu()){
+            this.ayudaJ.setDisable(true);
             this.inicializarCoordenadas();
             this.CPUvsCPU();
         
