@@ -45,6 +45,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,6 +91,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victory;
     private boolean empate;
     private boolean victoryFinal;
+    private boolean victoryJ;
+    private boolean empJ;
     private int[] index;
     private Jugada aHacer;
     @FXML
@@ -98,6 +103,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private VBox p2;
     @FXML
     private Button bTerminarJ;
+    @FXML
+    private Button ayudaJ;
 
     /**
      * Initializes the controller class.
@@ -138,6 +145,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 but.setDisable(condicion);
             }
         }
+        this.ayudaJ.setDisable(condicion);
     }
     private void compararNum(){
         if(j1.getDado()>=j2.getDado()){
@@ -163,35 +171,33 @@ public class Tablero_3_en_rayaController implements Initializable {
     private void visualizarTurno(int t){
         mensaje= new Label();
         sp1.getChildren().clear();
-        if(primero.isCpu() || segundo.isCpu()){
-            if(t%2==1){
-               if(primero.isCpu()){
-                   mensaje.setText("Turno de la maquina");
-               }else{
-                  mensaje.setText("Turno del jugador");  
-               }
-            }
-            else{
-                if(segundo.isCpu()){
-                   mensaje.setText("Turno de la maquina");
-               }else{
-                    mensaje.setText("Turno del jugador"); 
-                }
-            }
-            }else if(primero.isCpu() && segundo.isCpu()){
-            if(t%2==1){
-                mensaje.setText("Turno de la maquina 1");
-            }
-            else{
-               mensaje.setText("Turno de la maquina 2");
-            }
-        }else{
-            if(t%2==1){
+        if(t%2==1){
+           if(primero.getNombre()!=null){
+               mensaje.setText("Turno de jugador "+primero.getNombre()); 
+           }
+           else if(primero.isCpu() && segundo.isCpu()){
+               mensaje.setText("Turno de CPU "+primero.getId()); 
+           }
+           else if(primero.isCpu() && !segundo.isCpu()){
+               mensaje.setText("Turno de CPU");
+           }
+           else{
                mensaje.setText("Turno de jugador "+primero.getId()); 
-            }
-            else{
-                mensaje.setText("Turno de jugador "+segundo.getId());
-        }  
+           }
+        }
+        else{
+            if(segundo.getNombre()!=null){
+               mensaje.setText("Turno de jugador "+segundo.getNombre()); 
+           }
+           else if(segundo.isCpu()&&primero.isCpu()){
+               mensaje.setText("Turno de CPU "+segundo.getId()); 
+           }
+           else if(segundo.isCpu()&&!primero.isCpu()){
+                mensaje.setText("Turno de CPU"); 
+           }
+           else{
+               mensaje.setText("Turno de jugador "+segundo.getId()); 
+           }
         }
         
         mensaje.setFont(new javafx.scene.text.Font("Arial", 36));
@@ -249,14 +255,36 @@ public class Tablero_3_en_rayaController implements Initializable {
             Label lb1 = new Label();
             lb1.setFont(new Font(24));
             lb1.setTextFill(Color.WHITE);
-            lb1.setText("J1");
+            if(j1.getNombre()!=null){
+                lb1.setText(j1.getNombre());
+            }
+            else if(j1.isCpu()&&!j2.isCpu()){
+                lb1.setText("CPU");
+            }
+            else if(j1.isCpu()&&j2.isCpu()){
+                lb1.setText("CPU "+j1.getId());
+            }
+            else{
+                lb1.setText("J1");
+            }
             StackPane root = new StackPane();
             root.getChildren().add(lb1);
             StackPane.setAlignment(lb1, javafx.geometry.Pos.CENTER);
             Label lb2 = new Label();
             lb2.setFont(new Font(24));
             lb2.setTextFill(Color.WHITE);
-            lb2.setText("J2");
+            if(j2.getNombre()!=null){
+                lb2.setText(j2.getNombre());
+            }
+            else if(j2.isCpu()&&!j1.isCpu()){
+                lb2.setText("CPU");
+            }
+            else if(j2.isCpu()&&j2.isCpu()){
+                lb2.setText("CPU "+j2.getId());
+            }
+            else{
+                lb2.setText("J2");
+            }
             StackPane root2 = new StackPane();
             root2.getChildren().add(lb2);
             StackPane.setAlignment(lb2, javafx.geometry.Pos.CENTER);
@@ -332,6 +360,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 currentPhase=GamePhase.PUT;
             case PUT:
                 boolean estado = ponerFicha(iv);
+                this.mostrarMatriz(jugadas);
                 System.out.println(estado);
                 if(estado){
                     currentPhase=GamePhase.END;
@@ -346,6 +375,14 @@ public class Tablero_3_en_rayaController implements Initializable {
                     this.iniciarNuevoTurno();
                     visualizarTurno(turno);
                     this.inicializarIA();
+                    currentPhase= GamePhase.STANDBY;
+                }
+                else if(victory){
+                    modificarPuntuacion(actual,cmp);
+                    Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador","Ganador");
+                    if(victoria()){
+                        break;
+                    }
                     currentPhase= GamePhase.STANDBY;
                 }
                 else if(empate){
@@ -731,6 +768,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                 }
                   xAnterior=i;
                   yAnterior=k;
+                  this.mostrarMatriz(cop);
                   Tree<Jugada[][]> t = new Tree(cop);
                   juego.addChildren(t);
                 }
@@ -774,7 +812,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                             }
                         }
                         if(xAnterior!=Integer.MIN_VALUE &&yAnterior!=Integer.MIN_VALUE){
-                           cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior,0);;
+                           cop[xAnterior][yAnterior]= new Jugada(xAnterior,yAnterior,0);
                            jAnterior.add(cop[xAnterior][yAnterior]);
                        } 
                         for(int k=0; k<jAnterior.size();k++){
@@ -801,6 +839,7 @@ public class Tablero_3_en_rayaController implements Initializable {
                         p.setRowCPU(rowCPU);
                         p.setColCPU(colCPU);
                         cop[i][j]=p;
+                        this.mostrarMatriz(cop);
                         Tree<Jugada[][]> arb = new Tree(cop);
                         arb.getRootNode().setUtilidad(utilidadCPU-utilidadEnemy);
                         utilidades.add(arb.getRootNode().getUtilidad());
@@ -985,9 +1024,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         System.out.println("Matriz de jugada");
         if(aHacer!=null){
             int row= aHacer.getRowCPU();
-            System.out.println(row);
+            System.out.println("CPUF: "+row);
             int col = aHacer.getColCPU();
-            System.out.println(col);
+            System.out.println("CPUC: "+col);
             ImageView iv = imageViews[row][col];
             Simbolo sb = (Simbolo) iv.getUserData();
             Simbolo act = this.asignarSimbolo(actual);
@@ -1003,6 +1042,7 @@ public class Tablero_3_en_rayaController implements Initializable {
             }
             j.setId(id);
             j.setSimbolo(actual.getTipoSimbolo());
+            this.mostrarMatriz(jugadas);
             PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                 pause.setOnFinished(event -> {
                     sb.setImagen(act.getImagen());
@@ -1026,11 +1066,58 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.desOhabilitarBotones(buttons, false);
                 this.tocaIA();
             }
+            else if (victory) {
+                modificarPuntuacion(actual, cmp);
+                Util.mostrarMensaje("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+                this.victoria();
+            }
             else if (empate) {
                 Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
                 this.victoria();
                 this.emp();
                 empatePunt();
+            }
+        });
+        pause2.play();
+        this.mostrarMatriz(jugadas);
+        System.out.println("Terminado");
+    }
+    private void ponerFicha(int row,int col){
+        ImageView iv = imageViews[row][col];
+        Simbolo sb = (Simbolo) iv.getUserData();
+        Simbolo act = this.asignarSimbolo(actual);
+        Jugada j = jugadas[row][col];
+        j.setRow(row);
+        j.setCol(col);
+        int id=0;
+        if(sb.equals("X")){
+            id=1;
+        }
+        else{
+            id=2;
+        }
+        j.setId(id);
+        j.setSimbolo(actual.getTipoSimbolo());
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+            pause.setOnFinished(event -> {
+                sb.setImagen(act.getImagen());
+                sb.setJ(act.getJ());
+                iv.setUserData(sb);
+                iv.setFitWidth(anchoIm);
+                iv.setFitHeight(altoIm);
+                iv.setImage(new Image(sb.getImagen()));
+                this.desOhabilitarBotones(buttons, true);
+            });
+         pause.play(); 
+        PauseTransition pause2 = new PauseTransition(Duration.seconds(1));
+        pause2.setOnFinished(event->{
+            victory = this.tresEnRaya();
+            empate = this.empate();
+            if (!victory && !empate) {
+                this.desOhabilitarBotones(buttons, false);
+                iniciarNuevoTurno();
+                visualizarTurno(turno);
+                this.tocaIA();
             }
             else if (victory) {
                 modificarPuntuacion(actual, cmp);
@@ -1040,9 +1127,15 @@ public class Tablero_3_en_rayaController implements Initializable {
                     System.out.println("Hey, gano la maquina");
                 }
             }
+            else if (empate) {
+                Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
+                this.victoria();
+                this.emp();
+                empatePunt();
+            }
+            
         });
         pause2.play();
-        System.out.println("Terminado");
     }
     
     private void alertaFinPartida(String mensaje) {
@@ -1164,6 +1257,78 @@ public class Tablero_3_en_rayaController implements Initializable {
         window.setScene(Modos_de_juegoScene);
         window.show(); 
     }
+
+    @FXML
+    private void obtenerAyuda(MouseEvent event) throws Exception {
+        this.IA(actual, jugadas);
+        Jugada[][] copia = new Jugada[3][3];
+
+        System.out.println("Jugadas");
+        this.mostrarMatriz(jugadas);
+        if(aHacer!=null){ 
+            int rowRecomendada = aHacer.getRowCPU();
+            System.out.println(rowRecomendada);
+            rowRecomendada++;
+            int colRecomendada = aHacer.getColCPU();
+            System.out.println(colRecomendada);
+            colRecomendada++;
+            String filaRecomendada="";
+            String columnaRecomendada="";
+            switch (rowRecomendada) {
+                case 1:
+                    filaRecomendada="Primera";
+                    break;
+                case 2:
+                    filaRecomendada="Segunda";
+                    break;
+                case 3:
+                    filaRecomendada="Tercera";
+                    break;
+                default:
+                    break;
+            }
+            switch (colRecomendada) {
+                case 1:
+                    columnaRecomendada="Primera";
+                    break;
+                case 2:
+                    columnaRecomendada="Segunda";
+                    break;
+                case 3:
+                    columnaRecomendada="Tercera";
+                    break;
+                default:
+                    break;
+            }
+            
+            this.mostrarAyuda(colRecomendada, rowRecomendada, filaRecomendada, columnaRecomendada);
+        }
+    }
+    private void mostrarAyuda(int col,int row, String rowRecom,String colRecom){
+        Alert a = new Alert(AlertType.CONFIRMATION);
+        int fila = row-1;
+        System.out.println(fila);
+        int columna= col-1;
+        System.out.println(columna);
+        a.setTitle("Ayuda");
+        a.setContentText("Fila recomendada: "+colRecom+"\n"+"Columna recomendada: "+rowRecom);
+        ButtonType ok = new ButtonType("OK");
+        ButtonType poner_ficha = new ButtonType("Poner ficha en la pos recomendada");
+        a.getButtonTypes().setAll(ok,poner_ficha);
+        Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
+        stage.setAlwaysOnTop(true);
+        a.show();
+        a.setOnCloseRequest(response ->{
+            if(a.getResult()==ok){
+                Stage currentStage = (Stage) a.getDialogPane().getScene().getWindow();
+                currentStage.close();
+            }
+            else if(a.getResult()==poner_ficha){
+                this.ponerFicha(fila, columna);
+            }
+        });
+    }
+            
 
 }
 
