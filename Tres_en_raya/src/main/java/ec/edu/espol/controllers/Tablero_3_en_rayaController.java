@@ -246,7 +246,9 @@ public class Tablero_3_en_rayaController implements Initializable {
             this.CPUvsCPU();
         
         }
-        else this.tocaIA();
+        else {
+            this.tocaIA();
+        }
     }
     private void tocaIA(){
         this.asignarJActual(turno);
@@ -450,7 +452,8 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean emp(){
         if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
            if(primero.getPuntuacion()==r.getCantidad()&& segundo.getPuntuacion()==r.getCantidad()){
-               Util.mostrarMensaje("Habeis empatado","Empate","Empate");
+               String msj = "Habeis empatado";
+               this.alertaFinPartida(msj);
                return true;
            }
         }
@@ -460,41 +463,58 @@ public class Tablero_3_en_rayaController implements Initializable {
         if(cmp.compare(primero, j)==0 && primero.getId()==1){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
                 segundo.restarPuntuacion(1);
-                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                if(segundo.getPuntuacion()!=0){
+                    reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                }
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 primero.sumarPuntuacion(1);
-                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                if(primero.getPuntuacion()!=r.getCantidad()){
+                    reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                }
             }
         }
         else if(cmp.compare(primero, j)==0 && primero.getId()==2){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
                 segundo.restarPuntuacion(1);
-                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                if(segundo.getPuntuacion()!=0){
+                    reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                }
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 primero.sumarPuntuacion(1);
-                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                if(primero.getPuntuacion()!=r.getCantidad()){
+                    reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                }
             }
         }
         else if(cmp.compare(segundo, j)==0 && segundo.getId()==1 ){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
                 primero.restarPuntuacion(1);
-                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                if(primero.getPuntuacion()!=0){
+                    reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                }
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 segundo.sumarPuntuacion(1);
-                reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                if(segundo.getPuntuacion()!=r.getCantidad()){
+                    reiniciarTablero(segundo.getPuntuacion(), primero.getPuntuacion());
+                }
             }
         }
         else if(cmp.compare(segundo, j)==0 && segundo.getId()==2){
             if(r.getTipoResul().equals(TipoResul.PorVidas)){
                 primero.restarPuntuacion(1);
-                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                if(primero.getPuntuacion()!=0){
+                    reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                }
+                
             }
             else if(r.getTipoResul().equals(TipoResul.PorPuntaje)){
                 segundo.sumarPuntuacion(1);
-                reiniciarTablero(primero.getPuntuacion(), segundo.getPuntuacion());
+                if(segundo.getPuntuacion()!=r.getCantidad()){
+                    
+                }
             }
         }
     }
@@ -1179,14 +1199,17 @@ public class Tablero_3_en_rayaController implements Initializable {
         victory = false;
         empate = false;
         currentPhase = STANDBY;
-        turno = 0;
+        turno=0;
+        this.jugadas=new Jugada[3][3];
+        this.imageViews=new ImageView[3][3];
+        this.buttons=new Button[3][3];
+        this.victoryFinal=false;
+        j1.setPuntuacion(puntajeOgJ);
+        j2.setPuntuacion(puntajeOgJ);
         primero.setPuntuacion(puntajeOgJ);
         segundo.setPuntuacion(puntajeOgJ);
-        this.compararNum();
-        turno++;
-        visualizarTurno(turno);
-        inicializarResultado(this.puntajeOgJ, this.puntajeOgJ);
-        inicializarTablero();
+        this.inicializar(j1, j2, r);
+        
     }
     
     public void salirAlMenu(ActionEvent event) throws IOException {
