@@ -10,6 +10,7 @@ ec\edu\espol\model\Jugada.class
 ec\edu\espol\model\TipoResul.class
 ec\edu\espol\TDAs\Heap.class
 ec\edu\espol\controllers\Menu_PrincipalController.class
+ec\edu\espol\controllers\GeneralTreeController.class
 ec\edu\espol\model\Dado.class
 ec\edu\espol\controllers\Tablero_3_en_rayaController.class
 ec\edu\espol\controllers\Lanzada_dadosController$1.class

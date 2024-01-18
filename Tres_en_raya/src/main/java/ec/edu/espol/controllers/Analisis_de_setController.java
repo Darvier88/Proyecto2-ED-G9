@@ -85,7 +85,7 @@ public class Analisis_de_setController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-    private void inicializar(LinkedList<Jugada> jugadas, Jugador j1, Jugador j2,Resultado r){
+    public void inicializar(LinkedList<Jugada> jugadas, Jugador j1, Jugador j2,Resultado r){
         this.jugadasHechas=jugadas;
         this.j1=j1;
         this.j2=j2;

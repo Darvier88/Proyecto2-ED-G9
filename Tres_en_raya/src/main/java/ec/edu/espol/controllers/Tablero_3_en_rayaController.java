@@ -1172,21 +1172,8 @@ public class Tablero_3_en_rayaController implements Initializable {
 
         // Manejar la acción del botón "OK"
         Button reButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeReintentar);
-        reButton.addEventFilter(ActionEvent.ACTION, event -> {
-            System.out.println("Se hizo clic en OK");
-               FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Lanzada_dados.fxml"));
-                Parent dadosParent = null;
-           try {
-               dadosParent = loader.load();
-           } catch (IOException ex) {
-               ex.printStackTrace();
-           }
-                Scene dadosScene = new Scene(dadosParent,680,480);
-                Lanzada_dadosController lanzadaDadosController = loader.getController();
-                lanzadaDadosController.inicializar(j1, j2,r);
-                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                window.setScene(dadosScene);
-                window.show();;
+        reButton.addEventFilter(ActionEvent.ACTION, event->{
+            this.reintentarDesdeCero();
         });
 
         // Manejar la acción del botón "Cancel"
@@ -1206,7 +1193,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     }
     
-    public void reintentarDesdeCero() {;
+    public void reintentarDesdeCero() {
         victory = false;
         empate = false;
         currentPhase = STANDBY;
@@ -1302,6 +1289,26 @@ public class Tablero_3_en_rayaController implements Initializable {
 
         // Configurar el botón OK
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
+        if(primero.isCpu()&&!segundo.isCpu()|| segundo.isCpu()&& !primero.isCpu()|| !primero.isCpu()&&!segundo.isCpu()){
+            ButtonType analizarSet = new ButtonType("Analizar set",ButtonData.OK_DONE);
+            dialogPane.getButtonTypes().addAll(analizarSet);
+            Button analizarSetB = (Button) dialog.getDialogPane().lookupButton(analizarSet);
+            analizarSetB.addEventFilter(ActionEvent.ACTION, event ->{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Analisis_de_set.fxml"));
+                Parent Analisis_de_setParent=null;
+                try {
+                    Analisis_de_setParent = loader.load();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                Analisis_de_setController controller = loader.getController();
+                controller.inicializar(jugadasHechas, j1, j2, r);
+                Scene Analisis_de_setScene = new Scene(Analisis_de_setParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(Analisis_de_setScene);
+                window.show(); 
+            });
+        }
         ok.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
            @Override
            public void handle(ActionEvent event) {
@@ -1328,7 +1335,26 @@ public class Tablero_3_en_rayaController implements Initializable {
 
         ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButton);
-
+        if(primero.isCpu()&&!segundo.isCpu()|| segundo.isCpu()&& !primero.isCpu()|| !primero.isCpu()&&!segundo.isCpu()){
+            ButtonType analizarSet = new ButtonType("Analizar set",ButtonData.OK_DONE);
+            dialogPane.getButtonTypes().addAll(analizarSet);
+            Button analizarSetB = (Button) dialog.getDialogPane().lookupButton(analizarSet);
+            analizarSetB.addEventFilter(ActionEvent.ACTION, event ->{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Analisis_de_set.fxml"));
+                Parent Analisis_de_setParent=null;
+                try {
+                    Analisis_de_setParent = loader.load();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                Analisis_de_setController controller = loader.getController();
+                controller.inicializar(jugadasHechas, j1, j2, r);
+                Scene Analisis_de_setScene = new Scene(Analisis_de_setParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(Analisis_de_setScene);
+                window.show(); 
+            });
+        }
         // Configurar el botón OK
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
@@ -1355,6 +1381,26 @@ public class Tablero_3_en_rayaController implements Initializable {
 
         ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButton);
+        if(primero.isCpu()&&!segundo.isCpu()|| segundo.isCpu()&& !primero.isCpu()|| !primero.isCpu()&&!segundo.isCpu()){
+            ButtonType analizarSet = new ButtonType("Analizar set",ButtonData.OK_DONE);
+            dialogPane.getButtonTypes().addAll(analizarSet);
+            Button analizarSetB = (Button) dialog.getDialogPane().lookupButton(analizarSet);
+            analizarSetB.addEventFilter(ActionEvent.ACTION, event ->{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Analisis_de_set.fxml"));
+                Parent Analisis_de_setParent=null;
+                try {
+                    Analisis_de_setParent = loader.load();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                Analisis_de_setController controller = loader.getController();
+                controller.inicializar(jugadasHechas, j1, j2, r);
+                Scene Analisis_de_setScene = new Scene(Analisis_de_setParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(Analisis_de_setScene);
+                window.show(); 
+            });
+        }
 
         // Configurar el botón OK
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
@@ -1380,6 +1426,26 @@ public class Tablero_3_en_rayaController implements Initializable {
 
         ButtonType okButton = new ButtonType("OK", ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButton);
+        if(primero.isCpu()&&!segundo.isCpu()|| segundo.isCpu()&& !primero.isCpu()|| !primero.isCpu()&&!segundo.isCpu()){
+            ButtonType analizarSet = new ButtonType("Analizar set",ButtonData.OK_DONE);
+            dialogPane.getButtonTypes().addAll(analizarSet);
+            Button analizarSetB = (Button) dialog.getDialogPane().lookupButton(analizarSet);
+            analizarSetB.addEventFilter(ActionEvent.ACTION, event ->{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Analisis_de_set.fxml"));
+                Parent Analisis_de_setParent=null;
+                try {
+                    Analisis_de_setParent = loader.load();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                Analisis_de_setController controller = loader.getController();
+                controller.inicializar(jugadasHechas, j1, j2, r);
+                Scene Analisis_de_setScene = new Scene(Analisis_de_setParent,680,480);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(Analisis_de_setScene);
+                window.show(); 
+            });
+        }
 
         // Configurar el botón OK
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
