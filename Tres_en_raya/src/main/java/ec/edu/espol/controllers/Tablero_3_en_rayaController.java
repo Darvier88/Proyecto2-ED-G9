@@ -96,6 +96,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     private boolean victoryFinal = false;
     private boolean victoryJ;
     private boolean empJ;
+    private boolean stopCPUVCPU;
     private int[] index;
     private LinkedList<int[]> coordenadas = new LinkedList<>();
     private Jugada aHacer;
@@ -1130,7 +1131,8 @@ public class Tablero_3_en_rayaController implements Initializable {
                 this.desOhabilitarBotones(buttons, false);
                 iniciarNuevoTurno();
                 visualizarTurno(turno);
-                if(primero.isCpu()&&segundo.isCpu()){
+                if(primero.isCpu()&&segundo.isCpu()&&!stopCPUVCPU){
+                    System.out.println("Ejecutandose el if externo cpu");
                     this.CPUvsCPU();
                 }
                 else{
@@ -1138,18 +1140,16 @@ public class Tablero_3_en_rayaController implements Initializable {
                 }
             }
             else if (victory) {
-                modificarPuntuacion(actual, cmp);
                 
-                Util.mostrarMensaje2("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
-                if(this.victoria()){
-                    System.out.println("Hey, gano la maquina");
-                }
+                this.alertaGanadoraCPU("El resultado del set es: Victoria para " + actual.getId() + ", has ganado la partida.", "Ganador");
+                
             }
             else if (empate) {
-                Util.mostrarMensaje("El resultado del set es: Empate", "Empate");
-                this.victoria();
-                this.emp();
-                empatePunt();
+                this.alertaEmpateCPU("El resultado del set es: Empate", "Empate");
+//                
+//                this.victoria();
+//                this.emp();
+//                empatePunt();
             }
             
         });
@@ -1158,6 +1158,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     private void alertaFinPartida(String mensaje) {
        DialogPane dialogPane = new DialogPane();
+       dialogPane.setHeaderText("Victoria");
         dialogPane.setContentText(mensaje+"\n"+"¿Desea reintentar la partidad desde el inicio o salir al menu?");
 
         // Agregar botones personalizados al diálogo
@@ -1173,7 +1174,19 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button reButton = (Button) dialog.getDialogPane().lookupButton(buttonTypeReintentar);
         reButton.addEventFilter(ActionEvent.ACTION, event -> {
             System.out.println("Se hizo clic en OK");
-               reintentarDesdeCero();
+               FXMLLoader loader = new FXMLLoader(getClass().getResource("/ec/edu/espol/tres_en_raya/Lanzada_dados.fxml"));
+                Parent dadosParent = null;
+           try {
+               dadosParent = loader.load();
+           } catch (IOException ex) {
+               ex.printStackTrace();
+           }
+                Scene dadosScene = new Scene(dadosParent,680,480);
+                Lanzada_dadosController lanzadaDadosController = loader.getController();
+                lanzadaDadosController.inicializar(j1, j2,r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(dadosScene);
+                window.show();;
         });
 
         // Manejar la acción del botón "Cancel"
@@ -1193,9 +1206,7 @@ public class Tablero_3_en_rayaController implements Initializable {
     
     }
     
-    public void reintentarDesdeCero() {
-        //por el momento funciona para j vs j
-        System.out.println("Funciona el reintentar");
+    public void reintentarDesdeCero() {;
         victory = false;
         empate = false;
         currentPhase = STANDBY;
@@ -1349,9 +1360,12 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
             // Código a ejecutar después de cerrar la alerta
-            this.victoria();
+            if(primero.isCpu()&&segundo.isCpu()){
+                stopCPUVCPU = true;
+            }
             this.emp();
-            empatePunt();            
+            empatePunt();
+            this.victoria();            
         });
 
         dialog.show();
@@ -1371,6 +1385,9 @@ public class Tablero_3_en_rayaController implements Initializable {
         Button ok = (Button) dialog.getDialogPane().lookupButton(okButton);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
             // Código a ejecutar después de cerrar la alerta
+            if(primero.isCpu()&&segundo.isCpu()){
+                stopCPUVCPU = true;
+            }
             modificarPuntuacion(actual, cmp);
             this.victoria();
             
@@ -1415,6 +1432,7 @@ public class Tablero_3_en_rayaController implements Initializable {
         this.asignarJActual(turno);
         int[] rd; 
         if(!coordenadas.isEmpty()){
+            System.out.println("Ejecutandose el cpu");
             int pos=getRandomCoordenadas(coordenadas);
             rd=coordenadas.get(pos);
             this.ponerFicha(rd[0], rd[1]);
